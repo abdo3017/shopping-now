@@ -1,0 +1,45 @@
+<resources>
+    <string name="app_name">e commerce</string>
+    <string name="mapbox_access_token">pk.eyJ1IjoiYWJkb2dhenkxNCIsImEiOiJja2o3bnZqcW8xaWF0MnRrM3c5b2NmaWM1In0.w5ARF9u8-vwIyEmn122LvA</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="title_activity_main2">MainActivity</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Android Studio</string>
+    <string name="nav_header_subtitle">android.studio@android.com</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="menu_home">Home</string>
+    <string name="menu_gallery">Gallery</string>
+    <string name="menu_slideshow">Slideshow</string>
+    <string name="movie">movie</string>
+    <string name="tv">TV</string>
+    <string name="back">back</string>
+    <string name="home">home</string>
+    <string name="search">search</string>
+    <string name="fav">favourite</string>
+    <string name="searchIcon">searchIcon</string>
+    <string name="recommendedVideos">Recommended videos</string>
+    <string name="playingNow">playing now</string>
+    <string name="topRated">top rated</string>
+    <string name="upComming">up comming</string>
+    <string name="upComing">up coming</string>
+    <string name="popular">popular</string>
+    <string name="background">background</string>
+    <string name="on_the_air">on the air</string>
+    <string name="airing_today">airing today</string>
+    <string name="family">family</string>
+    <string name="drama">drama</string>
+    <string name="action">action</string>
+    <string name="fantasy">fantasy</string>
+    <string name="comedy">comedy</string>
+    <string name="clothes">clothes</string>
+    <string name="electronics">electronics</string>
+    <string name="Furniture">furniture</string>
+    <string name="my_cart">my cart</string>
+    <string name="order_items">order items</string>
+
+
+</resources>
