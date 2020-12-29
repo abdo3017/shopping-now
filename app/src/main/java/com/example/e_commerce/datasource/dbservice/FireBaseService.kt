@@ -19,9 +19,11 @@ import javax.inject.Inject
 @InternalCoroutinesApi
 class FireBaseService
 @Inject
-constructor() {
+constructor(
+    private val firestoreDB: FirebaseFirestore
+) {
     suspend fun addCategory(category: Categories) {
-        DBFireBase.getDB().collection("Categories").document(category.id!!).set(category)
+        firestoreDB.collection("Categories").document(category.id!!).set(category)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot written with ID: ${category.id}")
             }
@@ -33,7 +35,7 @@ constructor() {
 
     suspend fun getAllCategories(): Flow<List<Categories>> {
         return callbackFlow {
-            val listenerRegistration = DBFireBase.getDB().collection("Categories")
+            val listenerRegistration = firestoreDB.collection("Categories")
                 .addSnapshotListener { querySnapshot: QuerySnapshot?, firebaseFirestoreException: FirebaseFirestoreException? ->
                     if (firebaseFirestoreException != null) {
                         cancel(
@@ -55,12 +57,12 @@ constructor() {
     }
 
     suspend fun getCategory(category: Categories): Categories? {
-        return DBFireBase.getDB().collection("Categories").document(category.id!!)
+        return firestoreDB.collection("Categories").document(category.id!!)
             .get().result!!.toObject(Categories::class.java)
     }
 
     suspend fun addProduct(product: Products) {
-        DBFireBase.getDB().collection("Categories").document(product.catId!!).collection("Products")
+        firestoreDB.collection("Categories").document(product.catId!!).collection("Products")
             .add(product)
             .addOnSuccessListener { documentReference ->
                 Log.d(TAG, "DocumentSnapshot written with ID: ${documentReference.id}")
@@ -76,7 +78,7 @@ constructor() {
 
     suspend fun updateProduct(product: Products) {
         Log.w(TAG, "updateProduct :${product.quantity}")
-        DBFireBase.getDB().collection("Categories").document(product.catId!!)
+        firestoreDB.collection("Categories").document(product.catId!!)
             .collection("Products").document(product.id!!).set(
                 product,
                 SetOptions.merge()
@@ -89,7 +91,7 @@ constructor() {
             val order = getCurrentOrder()
             Log.d(TAG, "orderrrr:${PrefManager.getCustomer()}")
             var list: MutableList<Products>? = mutableListOf()
-            val docs = DBFireBase.getDB().collection("Categories").document(category.id!!)
+            val docs = firestoreDB.collection("Categories").document(category.id!!)
                 .collection("Products").get().await().documents
             if (order != null) {
                 for (document in docs) {
@@ -118,7 +120,7 @@ constructor() {
         return callbackFlow {
             val order = getCurrentOrder()
             var list: HashMap<Products, OrderDetails>? = hashMapOf()
-            val docs = DBFireBase.getDB().collection("Categories").document(category.id!!)
+            val docs = firestoreDB.collection("Categories").document(category.id!!)
                 .collection("Products").get().await().documents
             if (order != null) {
                 for (document in docs) {
@@ -170,7 +172,7 @@ constructor() {
 
 
     suspend fun addToShoppingCart(product: Products) {
-        val docs = DBFireBase.getDB().collection("Orders").whereEqualTo("submitted", false)
+        val docs = firestoreDB.collection("Orders").whereEqualTo("submitted", false)
             .get().await().documents
         if (!docs.isNullOrEmpty() && docs[0].exists()) {
             //add in exist order
@@ -215,7 +217,7 @@ constructor() {
 
     fun addOrderDetails(orderDetails: OrderDetails) {
 
-        DBFireBase.getDB().collection("OrderDetails")
+        firestoreDB.collection("OrderDetails")
             .document(orderDetails.orderId + "," + orderDetails.productId).set(orderDetails)
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully written!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error writing document", e) }
@@ -223,14 +225,14 @@ constructor() {
 
     suspend fun getOrderDetails(productId: String, orderId: String): OrderDetails? {
         kotlin.runCatching {
-            return DBFireBase.getDB().collection("OrderDetails").document("$orderId,$productId")
+            return firestoreDB.collection("OrderDetails").document("$orderId,$productId")
                 .get().await()!!.toObject(OrderDetails::class.java)
         }.getOrElse { return null }
 
     }
 
     suspend fun updateOrderDetails(orderDetails: OrderDetails) {
-        DBFireBase.getDB().collection("OrderDetails")
+        firestoreDB.collection("OrderDetails")
             .document(orderDetails.orderId + "," + orderDetails.productId).set(
                 orderDetails,
                 SetOptions.merge()
@@ -239,7 +241,7 @@ constructor() {
 
     suspend fun checkExistOrder(orderId: String): Boolean? {
         kotlin.runCatching {
-            DBFireBase.getDB().collection("OrderDetails")
+            firestoreDB.collection("OrderDetails")
                 .document(orderId).get().await()!!.toObject(Orders::class.java)
             return true
         }.getOrElse {
@@ -248,17 +250,17 @@ constructor() {
     }
 
     fun removeOrderDetails(orderDetails: OrderDetails) {
-        DBFireBase.getDB().collection("OrderDetails")
+        firestoreDB.collection("OrderDetails")
             .document(orderDetails.orderId + "," + orderDetails.productId).delete()
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
     }
 
     suspend fun addOrUpdateOrder(order: Orders) {
-        DBFireBase.getDB().collection("Orders").add(order)
+        firestoreDB.collection("Orders").add(order)
             .addOnSuccessListener { documentReference ->
                 order.id = documentReference.id
-                DBFireBase.getDB().collection("Orders").document(documentReference.id).set(
+                firestoreDB.collection("Orders").document(documentReference.id).set(
                     order,
                     SetOptions.merge()
                 )
@@ -271,7 +273,7 @@ constructor() {
     }
 
     suspend fun getCurrentOrder(): Orders? {
-        val doc = DBFireBase.getDB().collection("Orders").whereEqualTo("submitted", false)
+        val doc = firestoreDB.collection("Orders").whereEqualTo("submitted", false)
             .whereEqualTo("customerId", PrefManager.getCustomer()!!.id)
             .get().await().documents
         if (doc.isNullOrEmpty())
@@ -281,7 +283,7 @@ constructor() {
     }
 
     suspend fun updateOrder(orders: Orders) {
-        DBFireBase.getDB().collection("Orders")
+        firestoreDB.collection("Orders")
             .document(orders.id!!).set(
                 orders,
                 SetOptions.merge()
@@ -289,7 +291,7 @@ constructor() {
     }
 
     fun removeOrder(order: Orders) {
-        DBFireBase.getDB().collection("Orders")
+        firestoreDB.collection("Orders")
             .document(order.id!!).delete()
             .addOnSuccessListener { Log.d(TAG, "DocumentSnapshot successfully deleted!") }
             .addOnFailureListener { e -> Log.w(TAG, "Error deleting document", e) }
@@ -298,7 +300,7 @@ constructor() {
 
     suspend fun getCustomer(id: String): Customers? {
         kotlin.runCatching {
-            return DBFireBase.getDB().collection("Customers").document(id)
+            return firestoreDB.collection("Customers").document(id)
                 .get().await().toObject(Customers::class.java)
         }.getOrElse {
             return null
@@ -306,26 +308,22 @@ constructor() {
     }
 
     suspend fun addCustomer(customer: Customers) {
-        DBFireBase.getDB().collection("Customers").document(customer.id!!)
+        firestoreDB.collection("Customers").document(customer.id!!)
             .set(customer).await()
 
     }
 
     suspend fun updateCustomer(customer: Customers) {
-        DBFireBase.getDB().collection("Customers").document(customer.id!!).set(
+        firestoreDB.collection("Customers").document(customer.id!!).set(
             customer,
             SetOptions.merge()
         ).await()
     }
 }
 
-object DBFireBase {
-    fun getDB(db: FirebaseFirestore = FirebaseFirestore.getInstance()): FirebaseFirestore {
-//        val settings = firestoreSettings {
-//            isPersistenceEnabled = true
-//        }
-//        db.firestoreSettings = settings
-        return db
-    }
-}
+//object DBFireBase {
+//    fun getDB(): FirebaseFirestore {
+//        return FirebaseFirestore.getInstance()
+//    }
+//}
 

@@ -7,10 +7,12 @@ import javax.inject.Inject
 
 class AuthenticationService
 @Inject
-constructor() {
+constructor(
+    private val auth: FirebaseAuth
+) {
     suspend fun signIn(email: String, password: String): Boolean {
         kotlin.runCatching {
-            AuthFireBase.getAuth().signInWithEmailAndPassword(email, password).await()
+            auth.signInWithEmailAndPassword(email, password).await()
             return true
         }.getOrElse {
             return false
@@ -19,7 +21,7 @@ constructor() {
 
     suspend fun signUp(email: String, password: String): Boolean {
         kotlin.runCatching {
-            AuthFireBase.getAuth().createUserWithEmailAndPassword(email, password).await()
+            auth.createUserWithEmailAndPassword(email, password).await()
             return true
         }.getOrElse {
             return false
@@ -27,11 +29,11 @@ constructor() {
     }
 
     suspend fun updatePassword(password: String) {
-        AuthFireBase.getAuth().currentUser!!.updatePassword(password).await()
+        auth.currentUser!!.updatePassword(password).await()
 
     }
 }
 
-object AuthFireBase {
-    fun getAuth(auth: FirebaseAuth = FirebaseAuth.getInstance()) = auth
-}
+//object AuthFireBase {
+//    fun getAuth(auth: FirebaseAuth = FirebaseAuth.getInstance()) = auth
+//}

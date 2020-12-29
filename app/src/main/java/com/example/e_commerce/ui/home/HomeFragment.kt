@@ -47,7 +47,6 @@ class HomeFragment :
     override fun getViewModel() = homeViewModel
 
     private fun getCategoriesData() {
-        fireBaseService = FireBaseService()
         lifecycleScope.launch {
             getViewModel().getAllCategories()
         }

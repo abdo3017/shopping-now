@@ -22,6 +22,8 @@ allprojects {
         google()
         jcenter()
         maven {
+            maven { url "https://jitpack.io" }
+
             url 'https://api.mapbox.com/downloads/v2/releases/maven'
             authentication {
                 basic(BasicAuthentication)
