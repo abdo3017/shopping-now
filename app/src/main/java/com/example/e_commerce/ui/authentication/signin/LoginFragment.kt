@@ -85,7 +85,6 @@ class LoginFragment :
     override val bindingVariableValue: Any
         get() = getViewModel()
 
-
     private fun onClick() {
         getViewDataBinding().btnLogin.setOnClickListener {
             if (getViewDataBinding().checkRemember.isChecked) {

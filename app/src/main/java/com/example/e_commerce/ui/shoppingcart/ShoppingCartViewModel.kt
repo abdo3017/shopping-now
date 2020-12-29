@@ -3,7 +3,7 @@ package com.example.e_commerce.ui.shoppingcart
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.example.e_commerce.datasource.dbservice.FireBaseService
+import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Products
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 class ShoppingCartViewModel
 @ViewModelInject
 constructor(
-    private val fireBaseService: FireBaseService,
+    private val fireBaseService: FireBaseRepository,
     @Assisted val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
     private val _dataStateIncrementProducts: MutableLiveData<Boolean> =

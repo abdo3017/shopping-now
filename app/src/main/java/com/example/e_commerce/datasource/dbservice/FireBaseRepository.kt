@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
-class FireBaseService
+class FireBaseRepository
 @Inject
 constructor(
     private val firestoreDB: FirebaseFirestore

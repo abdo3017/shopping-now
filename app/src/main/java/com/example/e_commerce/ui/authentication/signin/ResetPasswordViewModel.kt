@@ -3,8 +3,8 @@ package com.example.e_commerce.ui.authentication.signin
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.example.e_commerce.datasource.dbservice.AuthenticationService
-import com.example.e_commerce.datasource.dbservice.FireBaseService
+import com.example.e_commerce.datasource.dbservice.AuthenticationRepository
+import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Customers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -15,8 +15,8 @@ import kotlinx.coroutines.launch
 class ResetPasswordViewModel
 @ViewModelInject
 constructor(
-    private val authentication: AuthenticationService,
-    private val fireBaseService: FireBaseService,
+    private val authentication: AuthenticationRepository,
+    private val fireBaseService: FireBaseRepository,
     @Assisted val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 

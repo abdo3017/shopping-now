@@ -40,7 +40,7 @@
                 android:orientation="horizontal">
 
                 <ImageView
-                    android:id="@+id/back_button"
+                    android:id="@+id/btnSignOut"
                     style="@style/Widget.ImageButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -49,7 +49,7 @@
                     android:focusable="true"
                     android:padding="@dimen/dimen8dp"
                     android:rotation="180"
-                    app:srcCompat="@drawable/ic_menu" />
+                    app:srcCompat="@drawable/ic_sign_out" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:layout_width="wrap_content"

@@ -11,11 +11,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentHomeBinding
-import com.example.e_commerce.datasource.dbservice.FireBaseService
+import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.Products
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
+import com.example.e_commerce.utils.PrefManager
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -27,7 +28,7 @@ import kotlinx.coroutines.launch
 class HomeFragment :
     BaseFragment<FragmentHomeBinding, HomeViewModel>(true) {
     private val homeViewModel: HomeViewModel by viewModels()
-    lateinit var fireBaseService: FireBaseService
+    lateinit var fireBaseService: FireBaseRepository
     private var categories: MutableList<Categories> = mutableListOf()
     private var products: MutableList<Products> = mutableListOf()
     private lateinit var adapter: HomeAdapter
@@ -111,6 +112,12 @@ class HomeFragment :
         }
         getViewDataBinding().searchButton.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
+        }
+
+        getViewDataBinding().btnSignOut.setOnClickListener {
+            PrefManager.deleteRememberMe()
+            PrefManager.deleteCustomer()
+            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToLoginFragment())
         }
 
     }

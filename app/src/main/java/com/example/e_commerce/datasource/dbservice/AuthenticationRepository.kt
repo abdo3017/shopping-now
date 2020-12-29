@@ -5,7 +5,7 @@ import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
 
 
-class AuthenticationService
+class AuthenticationRepository
 @Inject
 constructor(
     private val auth: FirebaseAuth
@@ -13,6 +13,15 @@ constructor(
     suspend fun signIn(email: String, password: String): Boolean {
         kotlin.runCatching {
             auth.signInWithEmailAndPassword(email, password).await()
+            return true
+        }.getOrElse {
+            return false
+        }
+    }
+
+    suspend fun signOut(): Boolean {
+        kotlin.runCatching {
+            auth.signOut()
             return true
         }.getOrElse {
             return false

@@ -10,7 +10,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -162,14 +161,14 @@ class ReviewOrderFragment :
             orders.orderDate = Constants.getCurrentDate()
             orders.address = "$latitude,$longitude"
             updateOrder(orders)
-            kotlin.runCatching {
-                sendMail(
-                    orders.id!!
-                )
-                findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToHomeFragment())
-            }.getOrElse {
-                Toast.makeText(requireContext(), "Please try Again !!", Toast.LENGTH_LONG).show()
-            }
+            findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToHomeFragment())
+//            kotlin.runCatching {
+//                sendMail(
+//                    orders.id!!
+//                )
+//            }.getOrElse {
+//                Toast.makeText(requireContext(), "Please try Again !!", Toast.LENGTH_LONG).show()
+//            }
         }
 
     }
