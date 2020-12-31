@@ -218,7 +218,7 @@ class ReviewOrderFragment :
     }
 
     private fun sendMail(orderId: String) {
-        val recipientList = "abdogazy14@gmail.com"
+        val recipientList = ""
         val recipients = recipientList.split(",".toRegex()).toTypedArray()
         val intent = Intent(Intent.ACTION_SEND)
         intent.putExtra(Intent.EXTRA_EMAIL, recipients)
@@ -230,12 +230,11 @@ class ReviewOrderFragment :
         intent.type = "message/rfc822"
         //startActivity(Intent.createChooser(intent, PrefManager.getCustomer()!!.userName))
 
-        val username = "myname@gmail.com"
-        val password = "mypassword"
+
         BackgroundMail.newBuilder(requireContext())
-            .withUsername("abdogazy14@gmail.com")
-            .withPassword("01002585111")
-            .withMailto("abdogazy15@gmail.com")
+            .withUsername("")
+            .withPassword("")
+            .withMailto("")
             .withBody("this is the body")
             .withOnSuccessCallback {
                 Log.d("heeeeereeeeee", "hahahahhahahaa")
