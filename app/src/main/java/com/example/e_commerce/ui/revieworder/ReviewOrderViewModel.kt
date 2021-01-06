@@ -3,6 +3,7 @@ package com.example.e_commerce.ui.revieworder
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.OrderDetails
@@ -22,18 +23,23 @@ constructor(
     private val fireBaseService: FireBaseRepository,
     @Assisted val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _dataStateOrder: MutableLiveData<Orders> =
+    private val _dataStateOrder: MutableLiveData<DataState<Orders>> =
         MutableLiveData()
-    val dataStateOrder: LiveData<Orders>
+    val dataStateOrder: LiveData<DataState<Orders>>
         get() = _dataStateOrder
 
-    private val _dataStateProducts: MutableLiveData<HashMap<Products, OrderDetails>> =
+    private val _dataStateUpdateOrder: MutableLiveData<DataState<Orders>> =
         MutableLiveData()
-    val dataStateProducts: MutableLiveData<HashMap<Products, OrderDetails>>
+    val dataStateUpdateOrder: LiveData<DataState<Orders>>
+        get() = _dataStateUpdateOrder
+
+    private val _dataStateProducts: MutableLiveData<DataState<HashMap<Products, OrderDetails>>> =
+        MutableLiveData()
+    val dataStateProducts: MutableLiveData<DataState<HashMap<Products, OrderDetails>>>
         get() = _dataStateProducts
-    private val _dataStateCategories: MutableLiveData<List<Categories>> =
+    private val _dataStateCategories: MutableLiveData<DataState<List<Categories>>> =
         MutableLiveData()
-    val dataStateCategories: LiveData<List<Categories>>
+    val dataStateCategories: LiveData<DataState<List<Categories>>>
         get() = _dataStateCategories
 
     suspend fun getAllCategories() {
@@ -54,13 +60,17 @@ constructor(
 
     suspend fun getCurrentOrder() {
         viewModelScope.launch {
-            _dataStateOrder.value = fireBaseService.getCurrentOrder()
+            fireBaseService.getCurrentOrder().onEach {
+                _dataStateOrder.value = it
+            }.launchIn(viewModelScope)
         }
     }
 
     suspend fun updateOrder(orders: Orders) {
         viewModelScope.launch {
-            fireBaseService.updateOrder(orders)
+            fireBaseService.updateOrder(orders).onEach {
+                _dataStateUpdateOrder.value = it
+            }.launchIn(viewModelScope)
         }
     }
 

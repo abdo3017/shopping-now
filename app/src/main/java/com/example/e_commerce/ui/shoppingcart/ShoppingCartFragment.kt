@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentShoppingCartBinding
 import com.example.e_commerce.datasource.models.Categories
@@ -31,7 +32,7 @@ class ShoppingCartFragment :
     private val homeViewModel: ShoppingCartViewModel by viewModels()
     private var categories: MutableList<Categories> = mutableListOf()
     private var products: MutableList<Products> = mutableListOf()
-    lateinit var builder1: AlertDialog.Builder
+    lateinit var showDialog: AlertDialog.Builder
     private var ordersDetails: MutableList<OrderDetails> = mutableListOf()
     var clickedPosition: Int = 0
     private lateinit var adapter: ShoppingCartAdapter
@@ -40,14 +41,13 @@ class ShoppingCartFragment :
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        builder1 = AlertDialog.Builder(requireContext())
+        showDialog = AlertDialog.Builder(requireContext())
         onClick()
         getCategoriesData()
         observeData()
         setViews()
         return getMRootView()
     }
-
 
     override fun getViewModel() = homeViewModel
 
@@ -91,11 +91,11 @@ class ShoppingCartFragment :
 
     private fun setViews() {
         getViewDataBinding().lifecycleOwner = this
-        builder1.setTitle("delete product")
-        builder1.setMessage("are you want to delete this product from Shopping cart!!")
-        builder1.setCancelable(true)
+        showDialog.setTitle("delete product")
+        showDialog.setMessage("are you want to delete this product from Shopping cart!!")
+        showDialog.setCancelable(true)
 
-        builder1.setPositiveButton(
+        showDialog.setPositiveButton(
             "Yes"
         ) { dialog, id ->
             removeFromShoppingCart(
@@ -107,12 +107,12 @@ class ShoppingCartFragment :
             dialog.cancel()
         }
 
-        builder1.setNegativeButton(
+        showDialog.setNegativeButton(
             "No"
         ) { dialog, id ->
             dialog.cancel()
         }
-        val alert11: AlertDialog = builder1.create()
+        val alert11: AlertDialog = showDialog.create()
         adapter = ShoppingCartAdapter(products, ordersDetails, clickListener())
         getViewDataBinding().rvProducts.adapter = adapter
         getViewDataBinding().rvProducts.addOnItemTouchListener(
@@ -137,36 +137,80 @@ class ShoppingCartFragment :
 
     private fun observeData() {
         getViewModel().dataStateCategories.observe(viewLifecycleOwner, {
-            categories = it.toMutableList()
-            getAllShoppingProducts(categories)
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<List<Categories>> -> {
+                    categories = it.data.toMutableList()
+                    getAllShoppingProducts(categories)
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
+
         })
 
         getViewModel().dataStateProducts.observe(viewLifecycleOwner, {
-            ordersDetails = it.map { it.value }.toMutableList()
-            products = it.map { it.key }.toMutableList()
-            adapter.addItems(products)
-            adapter.addOrderDetails(ordersDetails)
-        })
+            when (it) {
+                is DataState.Loading -> {
 
-        getViewModel().dataStateIncrementProducts.observe(viewLifecycleOwner, {
-            if (it) {
-                val product = adapter.getItem(clickedPosition)
-                product.quantity--
-                adapter.listView[clickedPosition]!!.product = product
-                val orderDetails = adapter.itemsOrderDetails[clickedPosition]
-                orderDetails.quantity++
-                adapter.listView[clickedPosition]!!.orderDetails = orderDetails
+                }
+                is DataState.Success<HashMap<Products, OrderDetails>> -> {
+
+                    ordersDetails = it.data.map { it.value }.toMutableList()
+                    products = it.data.map { it.key }.toMutableList()
+                    adapter.addItems(products)
+                    adapter.addOrderDetails(ordersDetails)
+                }
+                is DataState.Error<*> -> {
+
+                }
             }
         })
 
+        getViewModel().dataStateIncrementProducts.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Boolean> -> {
+                    if (it.data) {
+                        val product = adapter.getItem(clickedPosition)
+                        product.quantity--
+                        adapter.listView[clickedPosition]!!.product = product
+                        val orderDetails = adapter.itemsOrderDetails[clickedPosition]
+                        orderDetails.quantity++
+                        adapter.listView[clickedPosition]!!.orderDetails = orderDetails
+                    }
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
+
+        })
+
         getViewModel().dataStateDecrementProducts.observe(viewLifecycleOwner, {
-            if (it) {
-                val product = adapter.getItem(clickedPosition)
-                product.quantity++
-                adapter.listView[clickedPosition]!!.product = product
-                val orderDetails = adapter.itemsOrderDetails[clickedPosition]
-                orderDetails.quantity--
-                adapter.listView[clickedPosition]!!.orderDetails = orderDetails
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Boolean> -> {
+                    if (it.data) {
+                        val product = adapter.getItem(clickedPosition)
+                        product.quantity++
+                        adapter.listView[clickedPosition]!!.product = product
+                        val orderDetails = adapter.itemsOrderDetails[clickedPosition]
+                        orderDetails.quantity--
+                        adapter.listView[clickedPosition]!!.orderDetails = orderDetails
+                    }
+
+                }
+                is DataState.Error<*> -> {
+
+                }
             }
         })
     }

@@ -8,6 +8,7 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentResetPasswordBinding
 import com.example.e_commerce.datasource.models.Customers
@@ -24,6 +25,7 @@ class ResetPasswordFragment :
     BaseFragment<FragmentResetPasswordBinding, ResetPasswordViewModel>(false) {
     private val homeViewModel: ResetPasswordViewModel by viewModels()
     var id: String = ""
+    private lateinit var customer: Customers
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -70,28 +72,83 @@ class ResetPasswordFragment :
     }
 
     private fun observeData() {
-        getViewModel().dataStateSignIn.observe(viewLifecycleOwner, {
-            updatePassword(
-                getViewDataBinding().etEnterPassword.text.toString()
-            )
-            findNavController().popBackStack()
+        getViewModel().dataStateGetCustomers.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Customers> -> {
+                    customer = it.data
+                    signIn(
+                        it.data.userName!!,
+                        it.data.password!!
+                    )
+                    customer.password = getViewDataBinding().etEnterPassword.text.toString()
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         })
 
-        getViewModel().dataStateCustomers.observe(viewLifecycleOwner, {
-            if (it != null) {
-                val customer = it
-                signIn(
-                    customer.userName!!,
-                    customer.password!!
-                )
-                customer.password = getViewDataBinding().etEnterPassword.text.toString()
-                upDateCustomer(it)
-            } else
-                Toast.makeText(
-                    requireContext(), "Invalid  email",
-                    Toast.LENGTH_SHORT
-                ).show()
+        getViewModel().dataStateSignIn.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Boolean> -> {
+                    updatePassword(
+                        getViewDataBinding().etEnterPassword.text.toString()
+                    )
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         })
+        getViewModel().dataStateUpdatePassword.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Boolean> -> {
+                    upDateCustomer(customer)
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        })
+
+        getViewModel().dataStateUpdateCustomers.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Customers> -> {
+                    findNavController().popBackStack()
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
+        })
+
+
     }
 
     override val layoutId: Int

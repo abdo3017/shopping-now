@@ -24,60 +24,79 @@
 
     </data>
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/card"
-        style="@style/Widget.Card"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/item_height"
-        android:layout_margin="@dimen/dimen8dp"
-        android:transitionName="shared_element_container"
-        app:cardBackgroundColor="@color/transparent"
-        app:shapeAppearance="@style/Widget.listItem.Corner">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/card_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/card_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="@dimen/_4sdp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/imageViewHome"
+            style="@style/Widget.Card"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/_6sdp"
+            android:layout_marginBottom="@dimen/_8sdp"
+            android:transitionName="shared_element_container"
+            app:cardBackgroundColor="@color/transparent"
+            app:layout_constraintBottom_toBottomOf="@+id/add_button"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+
+            app:layout_constraintVertical_bias="0.0"
+            app:shapeAppearance="@style/Widget.listItem.Corner">
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/imageViewHome"
-                android:layout_width="@dimen/match_parent"
-                android:layout_height="@dimen/match_parent"
+                android:layout_width="match_parent"
+                android:layout_height="170dp"
                 android:scaleType="centerCrop"
                 android:transitionName="imageViewHome"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
                 app:load_backdrop="@{product.image}"
                 app:shapeAppearance="@style/Widget.listItem.Corner"
                 tools:srcCompat="@mipmap/hustle" />
+        </com.google.android.material.card.MaterialCardView>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/title"
-                style="@style/Widget.MovieTitle"
-                android:layout_width="@dimen/match_parent"
-                android:layout_height="wrap_content"
-                android:text="@{product.name}"
-                android:textColor="@color/black"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/bookmark_button"
-                app:layout_constraintStart_toStartOf="parent"
-                tools:text="Joker" />
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/title"
+            style="@style/Widget.Title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{product.name}"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/add_button"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewHome"
+            app:layout_constraintVertical_bias="0.0"
+            tools:text="Joker" />
 
-            <ImageView
-                android:id="@+id/bookmark_button"
-                style="@style/Widget.ImageButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/_5sdp"
-                android:layout_marginBottom="@dimen/dimen24dp"
-                android:background="@{!isFav ? @drawable/ic_add_shopping_cart_ : @drawable/ic_added}"
-                android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
-                android:padding="@dimen/dimen8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/title" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/price"
+            style="@style/Widget.Price"
+            android:layout_width="@dimen/match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{product.price+` EGP`}"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/title"
+            tools:text="price" />
+
+        <ImageView
+            android:id="@+id/add_button"
+            style="@style/Widget.ImageButton"
+            android:layout_width="@dimen/_26sdp"
+            android:layout_height="@dimen/_26sdp"
+            android:layout_marginTop="140dp"
+            android:background="@drawable/corner_rectangle"
+            android:elevation="@dimen/_6sdp"
+            android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
+            android:padding="@dimen/dimen8dp"
+            android:src="@{!isFav? @drawable/ic_add_shopping_cart_ : @drawable/ic_added}"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

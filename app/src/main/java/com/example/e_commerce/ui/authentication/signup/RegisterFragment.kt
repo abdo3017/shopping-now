@@ -7,9 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.DatePicker
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentRegisterBinding
 import com.example.e_commerce.datasource.models.Customers
@@ -62,23 +64,39 @@ class RegisterFragment :
 
     private fun observeData() {
         getViewModel().dataStateSignUp.observe(viewLifecycleOwner, {
-            val gender = if (getViewDataBinding().rbFemale.isChecked)
-                "female"
-            else
-                "male"
+            when (it) {
+                is DataState.Loading -> {
 
-            addCustomer(
-                Customers(
-                    id = getViewDataBinding().etEnterEmail.text.toString(),
-                    name = getViewDataBinding().etEnterName.text.toString(),
-                    userName = getViewDataBinding().etEnterEmail.text.toString(),
-                    password = getViewDataBinding().etEnterPassword.text.toString(),
-                    job = getViewDataBinding().etEnterJob.text.toString(),
-                    gender = gender,
-                    birthDate = getViewDataBinding().etEnterBirthDate.text.toString()
-                )
-            )
-            findNavController().popBackStack()
+                }
+                is DataState.Success<Boolean> -> {
+                    addCustomer(
+                        getCustomerData()
+                    )
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+        })
+
+        getViewModel().dataStateCustomers.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Customers> -> {
+                    findNavController().popBackStack()
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         })
     }
 
@@ -117,5 +135,17 @@ class RegisterFragment :
         getViewDataBinding().etEnterBirthDate.setText("$dayOfMonth - ${month + 1} - $year")
     }
 
+    private fun getCustomerData() = Customers(
+        id = getViewDataBinding().etEnterEmail.text.toString(),
+        name = getViewDataBinding().etEnterName.text.toString(),
+        userName = getViewDataBinding().etEnterEmail.text.toString(),
+        password = getViewDataBinding().etEnterPassword.text.toString(),
+        job = getViewDataBinding().etEnterJob.text.toString(),
+        gender = if (getViewDataBinding().rbFemale.isChecked)
+            "female"
+        else
+            "male",
+        birthDate = getViewDataBinding().etEnterBirthDate.text.toString()
+    )
 
 }

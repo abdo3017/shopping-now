@@ -46,6 +46,7 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.3.2'
     implementation 'androidx.appcompat:appcompat:1.2.0'
     implementation 'com.google.android.material:material:1.2.1'
+    implementation "androidx.coordinatorlayout:coordinatorlayout:1.1.0"
     implementation 'androidx.constraintlayout:constraintlayout:2.0.4'
     implementation 'com.google.firebase:firebase-analytics:18.0.0'
     implementation 'com.google.firebase:firebase-firestore:22.0.1'
@@ -88,7 +89,21 @@ dependencies {
     def fragment_ktx = "1.2.5"
     //noinspection GradleDependency
     implementation "androidx.fragment:fragment-ktx:$fragment_ktx"
-    implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.2.0"
+
+    implementation 'android.arch.lifecycle:extensions:1.1.1'
+    implementation "android.arch.lifecycle:runtime:1.1.1"
+    def lifecycle_version = "2.2.0"
+    // ViewModel
+    //noinspection GradleDependency
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
+    // LiveData
+    implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version"
+    // Annotation processor
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    annotationProcessor "androidx.lifecycle:lifecycle-compiler:$lifecycle_version"
+    // Lifecycle only (without ViewModel or LiveData)
+    //noinspection GradleDependency
+    implementation "androidx.lifecycle:lifecycle-runtime-ktx:$lifecycle_version"
 
     def retrofit = "2.6.0"
     //noinspection GradleDependency
@@ -151,9 +166,15 @@ dependencies {
     //Facebook Shimmer Loading
     implementation 'com.facebook.shimmer:shimmer:0.5.0'
 
-    //mapBox
-   //QR code scanner
+    //QR code scanner
     implementation 'com.budiyev.android:code-scanner:2.1.0'
+
+    //A circular ImageView for Android
+    implementation 'de.hdodenhof:circleimageview:3.1.0'
+    implementation 'com.mikhaellopez:circularimageview:4.2.0'
+
+    //loading dialog
+    implementation 'com.kaopiz:kprogresshud:1.2.0'
 
 }
 

@@ -14,6 +14,7 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.app.movie.domain.state.DataState
 import com.creativityapps.gmailbackgroundlibrary.BackgroundMail
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentReviewOrderBinding
@@ -71,12 +72,17 @@ class ReviewOrderFragment :
         return getMRootView()
     }
 
-
     override fun getViewModel() = homeViewModel
 
     private fun getCategoriesData() {
         lifecycleScope.launch {
             getViewModel().getAllCategories()
+        }
+    }
+
+    private fun getCurrentOrder() {
+        lifecycleScope.launch {
+            getViewModel().getCurrentOrder()
         }
     }
 
@@ -90,12 +96,6 @@ class ReviewOrderFragment :
     private fun getProductsShoppingCartDataByCategory(category: Categories) {
         lifecycleScope.launch {
             getViewModel().getProductsShoppingCartByCategory(category)
-        }
-    }
-
-    private fun getCurrentOrder() {
-        lifecycleScope.launch {
-            getViewModel().getCurrentOrder()
         }
     }
 
@@ -118,34 +118,93 @@ class ReviewOrderFragment :
     @SuppressLint("SetTextI18n")
     private fun observeData() {
         getViewModel().dataStateCategories.observe(viewLifecycleOwner, {
-            categories = it.toMutableList()
-            getAllShoppingProducts(categories)
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<List<Categories>> -> {
+                    categories = it.data.toMutableList()
+                    getAllShoppingProducts(categories)
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
+
         })
 
         getViewModel().dataStateProducts.observe(viewLifecycleOwner, {
-            lastProducts++
-            ordersDetails = it.map { it.value }.toMutableList()
-            products = it.map { it.key }.toMutableList()
-            price += products.zip(ordersDetails).toMap().map { it.key.price * it.value.quantity }
-                .sum()
-            if (lastProducts == 3)
-                getViewDataBinding().byButton.text =
-                    getViewDataBinding().byButton.text.toString() + " / $price"
-            adapter.addItems(products)
-            adapter.addOrderDetails(ordersDetails)
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<HashMap<Products, OrderDetails>> -> {
+                    lastProducts++
+                    ordersDetails = it.data.map { it.value }.toMutableList()
+                    products = it.data.map { it.key }.toMutableList()
+                    price += products.zip(ordersDetails).toMap()
+                        .map { it.key.price * it.value.quantity }
+                        .sum()
+                    if (lastProducts == 3)
+                        getViewDataBinding().byButton.text =
+                            getViewDataBinding().byButton.text.toString() + " / $price"
+                    adapter.addItems(products)
+                    adapter.addOrderDetails(ordersDetails)
+                    adapter.addItems(products)
+                    adapter.addOrderDetails(ordersDetails)
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
         })
 
         getViewModel().dataStateOrder.observe(viewLifecycleOwner, {
-            orders = it
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Orders> -> {
+                    orders = it.data
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
+        })
+        getViewModel().dataStateUpdateOrder.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Orders> -> {
+                    findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToHomeFragment())
+                    //                   kotlin.runCatching {
+//                sendMail(
+//                    orders.id!!
+//                )
+//            }.getOrElse {
+//                Toast.makeText(requireContext(), "Please try Again !!", Toast.LENGTH_LONG).show()
+//            }
+                }
+                is DataState.Error<*> -> {
+
+                }
+            }
         })
 
     }
 
-    override val layoutId: Int
+    override
+    val layoutId: Int
         get() = R.layout.fragment_review_order
-    override val bindingVariableId: Int
+
+    override
+    val bindingVariableId: Int
         get() = 0
-    override val bindingVariableValue: Any
+
+    override
+    val bindingVariableValue: Any
         get() = getViewModel()
 
 
@@ -161,14 +220,6 @@ class ReviewOrderFragment :
             orders.orderDate = Constants.getCurrentDate()
             orders.address = "$latitude,$longitude"
             updateOrder(orders)
-            findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToHomeFragment())
-//            kotlin.runCatching {
-//                sendMail(
-//                    orders.id!!
-//                )
-//            }.getOrElse {
-//                Toast.makeText(requireContext(), "Please try Again !!", Toast.LENGTH_LONG).show()
-//            }
         }
 
     }

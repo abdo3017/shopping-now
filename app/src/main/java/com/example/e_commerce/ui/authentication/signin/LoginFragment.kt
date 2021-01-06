@@ -1,7 +1,6 @@
 package com.example.e_commerce.ui.authentication.signin
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -9,8 +8,10 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentLoginBinding
+import com.example.e_commerce.datasource.models.Customers
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.utils.PrefManager
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,22 +60,39 @@ class LoginFragment :
 
     private fun observeData() {
         getViewModel().dataStateSignIn.observe(viewLifecycleOwner, {
-            if (it)
-                getCustomer(id)
-            else
-                Toast.makeText(
-                    requireContext(), "Authentication failed.",
-                    Toast.LENGTH_SHORT
-                ).show()
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Boolean> -> {
+                    getCustomer(id)
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
+
         })
 
-        getViewModel().dataStateCustomers.observe(viewLifecycleOwner, {
-            PrefManager.saveCustomer(it)
-            Log.d(
-                "hereeeeeee",
-                "DocumentSnapshot successfully deleted! ${PrefManager.getCustomer()}"
-            )
-            findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
+        getViewModel().dataStateGetCustomers.observe(viewLifecycleOwner, {
+            when (it) {
+                is DataState.Loading -> {
+
+                }
+                is DataState.Success<Customers> -> {
+                    PrefManager.saveCustomer(it.data)
+                    findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
+                }
+                is DataState.Error<*> -> {
+                    Toast.makeText(
+                        requireContext(), "Authentication failed.",
+                        Toast.LENGTH_SHORT
+                    ).show()
+                }
+            }
         })
     }
 

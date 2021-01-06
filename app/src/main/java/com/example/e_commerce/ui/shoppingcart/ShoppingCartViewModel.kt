@@ -3,6 +3,7 @@ package com.example.e_commerce.ui.shoppingcart
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.OrderDetails
@@ -21,21 +22,21 @@ constructor(
     private val fireBaseService: FireBaseRepository,
     @Assisted val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _dataStateIncrementProducts: MutableLiveData<Boolean> =
+    private val _dataStateIncrementProducts: MutableLiveData<DataState<Boolean>> =
         MutableLiveData()
-    val dataStateIncrementProducts: LiveData<Boolean>
+    val dataStateIncrementProducts: LiveData<DataState<Boolean>>
         get() = _dataStateIncrementProducts
-    private val _dataStateDecrementProducts: MutableLiveData<Boolean> =
+    private val _dataStateDecrementProducts: MutableLiveData<DataState<Boolean>> =
         MutableLiveData()
-    val dataStateDecrementProducts: MutableLiveData<Boolean>
+    val dataStateDecrementProducts: MutableLiveData<DataState<Boolean>>
         get() = _dataStateDecrementProducts
-    private val _dataStateProducts: MutableLiveData<HashMap<Products, OrderDetails>> =
+    private val _dataStateProducts: MutableLiveData<DataState<HashMap<Products, OrderDetails>>> =
         MutableLiveData()
-    val dataStateProducts: MutableLiveData<HashMap<Products, OrderDetails>>
+    val dataStateProducts: MutableLiveData<DataState<HashMap<Products, OrderDetails>>>
         get() = _dataStateProducts
-    private val _dataStateCategories: MutableLiveData<List<Categories>> =
+    private val _dataStateCategories: MutableLiveData<DataState<List<Categories>>> =
         MutableLiveData()
-    val dataStateCategories: LiveData<List<Categories>>
+    val dataStateCategories: LiveData<DataState<List<Categories>>>
         get() = _dataStateCategories
 
     suspend fun getAllCategories() {
@@ -56,19 +57,25 @@ constructor(
 
     suspend fun removeFromShoppingCart(product: Products, orderDetails: OrderDetails) {
         viewModelScope.launch {
-            fireBaseService.removeFromShoppingCart(product, orderDetails)
+            fireBaseService.removeFromShoppingCart(product, orderDetails).onEach {
+
+            }.launchIn(viewModelScope)
         }
     }
 
     suspend fun incrementQuantity(product: Products) {
         viewModelScope.launch {
-            _dataStateIncrementProducts.value = fireBaseService.incrementQuantity(product)
+            fireBaseService.incrementQuantity(product).onEach {
+                _dataStateIncrementProducts.value = it
+            }.launchIn(viewModelScope)
         }
     }
 
     suspend fun decrementQuantity(product: Products) {
         viewModelScope.launch {
-            _dataStateDecrementProducts.value = fireBaseService.decrementQuantity(product)
+            fireBaseService.decrementQuantity(product).onEach {
+                _dataStateDecrementProducts.value = it
+            }.launchIn(viewModelScope)
         }
     }
 

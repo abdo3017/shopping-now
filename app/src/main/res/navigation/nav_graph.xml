@@ -19,9 +19,9 @@
         <action
             android:id="@+id/action_homeFragment_to_shoppingCartFragment"
             app:destination="@id/shoppingCartFragment" />
-        <action
-            android:id="@+id/action_homeFragment_to_searchFragment"
-            app:destination="@id/searchFragment" />
+        <!--        <action-->
+        <!--            android:id="@+id/action_homeFragment_to_searchFragment"-->
+        <!--            app:destination="@id/searchFragment" />-->
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -35,11 +35,11 @@
             android:id="@+id/action_shoppingCartFragment_to_reviewOrderFragment"
             app:destination="@id/reviewOrderFragment" />
     </fragment>
-    <fragment
-        android:id="@+id/searchFragment"
-        android:name="com.example.e_commerce.ui.search.SearchFragment"
-        android:label="SearchFragment"
-        tools:layout="@layout/fragment_search" />
+    <!--    <fragment-->
+    <!--        android:id="@+id/searchFragment"-->
+    <!--        android:name="com.example.e_commerce.ui.search.SearchFragment"-->
+    <!--        android:label="SearchFragment"-->
+    <!--        tools:layout="@layout/fragment_search" />-->
     <fragment
         android:id="@+id/splashFragment"
         android:name="com.example.e_commerce.ui.main.SplashFragment"

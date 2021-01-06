@@ -1,84 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
 
-    <data>
-
-        <import type="android.view.View" />
-
-        <variable
-            name="isLoadingTV"
-            type="java.lang.Boolean" />
-
-        <variable
-            name="isLoadingAll"
-            type="java.lang.Boolean" />
-
-        <variable
-            name="isLoadingClothes"
-            type="java.lang.Boolean" />
-
-        <variable
-            name="isLoadingElectronics"
-            type="java.lang.Boolean" />
-
-        <variable
-            name="isLoadingFurniture"
-            type="java.lang.Boolean" />
-    </data>
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:fitsSystemWindows="true">
+        android:layout_height="192dp"
+        android:fitsSystemWindows="true"
+        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
-        <com.google.android.material.appbar.AppBarLayout
-            android:id="@+id/appbar"
+        <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/collapsing_toolbar"
             android:layout_width="match_parent"
-            android:layout_height="192dp"
+            android:layout_height="match_parent"
             android:fitsSystemWindows="true"
-            android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
+            app:contentScrim="?attr/colorPrimary"
+            app:expandedTitleMarginEnd="64dp"
+            app:expandedTitleMarginStart="48dp"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
 
-            <com.google.android.material.appbar.CollapsingToolbarLayout
-                android:id="@+id/collapsing_toolbar"
+            <com.google.android.material.imageview.ShapeableImageView
+                android:id="@+id/header"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:fitsSystemWindows="true"
-                app:contentScrim="?attr/colorPrimary"
-                app:expandedTitleMarginEnd="64dp"
-                app:expandedTitleMarginStart="48dp"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap">
-
-                <com.google.android.material.imageview.ShapeableImageView
-                    android:id="@+id/header"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:fitsSystemWindows="true"
-                    android:scaleType="fitXY"
-                    android:src="@mipmap/ecommerce"
-                    app:layout_collapseMode="parallax" />
+                android:scaleType="fitXY"
+                android:src="@color/dark_orange"
+                app:layout_collapseMode="parallax" />
 
 
-            </com.google.android.material.appbar.CollapsingToolbarLayout>
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
 
-        </com.google.android.material.appbar.AppBarLayout>
+    </com.google.android.material.appbar.AppBarLayout>
 
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:orientation="vertical"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior">
+            android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/categories"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/_2sdp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/_2sdp">
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:id="@+id/clothes"
@@ -88,21 +63,21 @@
                     android:layout_marginEnd="@dimen/_4sdp"
                     android:background="@drawable/rounded_view"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                    android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgClothes"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
                         android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/clothes" />
+                        android:src="@mipmap/hustle" />
 
                     <TextView
                         android:id="@+id/tvClothes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
+                        android:elevation="4dp"
                         android:focusable="true"
                         android:maxLines="1"
                         android:paddingStart="@dimen/_9sdp"
@@ -120,30 +95,31 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
                     android:layout_marginEnd="@dimen/_4sdp"
+                    android:background="@drawable/rounded_view"
                     android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                    android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgElectronics"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
                         android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/electronics" />
+                        android:src="@mipmap/hustle" />
 
                     <TextView
                         android:id="@+id/tvElectronics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
+                        android:elevation="4dp"
                         android:focusable="true"
                         android:maxLines="1"
                         android:paddingStart="@dimen/_9sdp"
                         android:paddingTop="@dimen/_5sdp"
                         android:paddingEnd="@dimen/_9sdp"
                         android:paddingBottom="@dimen/_5sdp"
-                        android:text="@string/electronics"
-                        android:textColor="@color/color3"
+                        android:text="@string/clothes"
+                        android:textColor="@color/color1"
                         android:textSize="@dimen/_13ssp" />
                 </LinearLayout>
 
@@ -152,33 +128,32 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/_10sdp"
+                    android:background="@drawable/rounded_view"
                     android:gravity="center"
-
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                    android:orientation="horizontal">
 
                     <de.hdodenhof.circleimageview.CircleImageView
                         android:id="@+id/imgFurniture"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
+                        android:layout_width="@dimen/_28sdp"
+                        android:layout_height="@dimen/_28sdp"
                         android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/furniture" />
+                        android:src="@mipmap/hustle" />
 
                     <TextView
                         android:id="@+id/tvFurniture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:clickable="true"
+                        android:elevation="4dp"
                         android:focusable="true"
-                        android:gravity="start"
                         android:maxLines="1"
                         android:paddingStart="@dimen/_9sdp"
                         android:paddingTop="@dimen/_5sdp"
                         android:paddingEnd="@dimen/_9sdp"
                         android:paddingBottom="@dimen/_5sdp"
-                        android:text="@string/Furniture"
-                        android:textColor="@color/color3"
-                        android:textSize="@dimen/_12ssp" />
+                        android:text="@string/clothes"
+                        android:textColor="@color/color1"
+                        android:textSize="@dimen/_13ssp" />
                 </LinearLayout>
 
             </LinearLayout>
@@ -195,6 +170,6 @@
 
         </LinearLayout>
 
+    </androidx.core.widget.NestedScrollView>
 
-    </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</layout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

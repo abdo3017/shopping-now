@@ -3,6 +3,7 @@ package com.example.e_commerce.ui.home
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.app.movie.domain.state.DataState
 import com.example.e_commerce.datasource.dbservice.AuthenticationRepository
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
@@ -22,15 +23,28 @@ constructor(
     private val fireBaseService: FireBaseRepository,
     @Assisted val savedStateHandle: SavedStateHandle
 ) : ViewModel() {
-    private val _dataStateProducts: MutableLiveData<List<Products>> =
+    //}, LifecycleObserver {
+    private val _dataStateProducts: MutableLiveData<DataState<List<Products>>> =
         MutableLiveData()
-    val dataStateProducts: LiveData<List<Products>>
+    val dataStateProducts: LiveData<DataState<List<Products>>>
         get() = _dataStateProducts
-    private val _dataStateCategories: MutableLiveData<List<Categories>> =
+
+    private val _dataStateAddToShoppingCart: MutableLiveData<DataState<Products>> =
         MutableLiveData()
-    val dataStateCategories: LiveData<List<Categories>>
+    val dataStateAddToShoppingCart: LiveData<DataState<Products>>
+        get() = _dataStateAddToShoppingCart
+
+    private val _dataStateCategories: MutableLiveData<DataState<List<Categories>>> =
+        MutableLiveData()
+    val dataStateCategories: LiveData<DataState<List<Categories>>>
         get() = _dataStateCategories
 
+    private val _dataStateSignOut: MutableLiveData<DataState<Boolean>> =
+        MutableLiveData()
+    val dataStateSignOut: LiveData<DataState<Boolean>>
+        get() = _dataStateSignOut
+
+    //@OnLifecycleEvent(Lifecycle.Event.ON_START)
     suspend fun getAllCategories() {
         viewModelScope.launch {
             fireBaseService.getAllCategories().onEach {
@@ -49,13 +63,17 @@ constructor(
 
     suspend fun signOut() {
         viewModelScope.launch {
-            authenticationRepository.signOut()
+            authenticationRepository.signOut().onEach {
+                _dataStateSignOut.value = it
+            }.launchIn(viewModelScope)
         }
     }
 
     suspend fun addToShoppingCart(product: Products) {
         viewModelScope.launch {
-            fireBaseService.addToShoppingCart(product)
+            fireBaseService.addToShoppingCart(product).onEach {
+                _dataStateAddToShoppingCart.value = it
+            }.launchIn(viewModelScope)
         }
     }
 

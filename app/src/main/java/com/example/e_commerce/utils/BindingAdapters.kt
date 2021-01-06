@@ -18,6 +18,7 @@ object BindingAdapters {
                 .into(image)
         }
     }
+
 }
 //
 //import android.widget.ImageView
