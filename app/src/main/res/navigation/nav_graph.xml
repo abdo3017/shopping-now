@@ -5,11 +5,6 @@
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
 
-    <!--<fragment
-        android:id="@+id/splashFragment"
-        android:name="com.app.movie.presentation.ui.main.SplashFragment"
-        android:label="fragment_splash"
-        tools:layout="@layout/fragment_splash" />-->
     <fragment
         android:id="@+id/homeFragment"
         android:name="com.example.e_commerce.ui.home.HomeFragment"
@@ -25,6 +20,9 @@
         <action
             android:id="@+id/action_homeFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_homeFragment_to_productDetailsFragment"
+            app:destination="@id/productDetailsFragment" />
     </fragment>
     <fragment
         android:id="@+id/shoppingCartFragment"
@@ -32,8 +30,8 @@
         android:label="ShoppingCartFragment"
         tools:layout="@layout/fragment_shopping_cart">
         <action
-            android:id="@+id/action_shoppingCartFragment_to_reviewOrderFragment"
-            app:destination="@id/reviewOrderFragment" />
+            android:id="@+id/action_shoppingCartFragment_to_shoppingCartBottomCartFragment"
+            app:destination="@id/shoppingCartBottomCartFragment" />
     </fragment>
     <!--    <fragment-->
     <!--        android:id="@+id/searchFragment"-->
@@ -83,9 +81,41 @@
         android:label="ReviewOrderFragment"
         tools:layout="@layout/fragment_review_order">
         <action
-            android:id="@+id/action_reviewOrderFragment_to_homeFragment"
-            app:destination="@id/homeFragment" />
+            android:id="@+id/action_reviewOrderFragment_to_mapFragment"
+            app:destination="@id/mapFragment" />
     </fragment>
 
 
+    <dialog
+        android:id="@+id/shoppingCartBottomCartFragment"
+        android:name="com.example.e_commerce.ui.shoppingcart.ShoppingCartBottomCartFragment"
+        android:label="ShoppingCartBottomCartFragment"
+        tools:layout="@layout/fragment_shopping_cart_bottom_sheet">
+        <argument
+            android:name="totalPrice"
+            app:argType="string"
+            app:nullable="true" />
+        <action
+            android:id="@+id/action_shoppingCartBottomCartFragment_to_reviewOrderFragment"
+            app:destination="@id/reviewOrderFragment" />
+
+    </dialog>
+    <fragment
+        android:id="@+id/mapFragment"
+        android:name="com.example.e_commerce.ui.revieworder.MapFragment"
+        android:label="MapFragment"
+        tools:layout="@layout/fragment_map">
+        <action
+            android:id="@+id/action_mapFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/productDetailsFragment"
+        android:name="com.example.e_commerce.ui.home.ProductDetailsFragment"
+        android:label="ProductDetailsFragment"
+        tools:layout="@layout/fragment_product_details">
+        <argument
+            android:name="product"
+            app:argType="com.example.e_commerce.datasource.models.Products" />
+    </fragment>
 </navigation>

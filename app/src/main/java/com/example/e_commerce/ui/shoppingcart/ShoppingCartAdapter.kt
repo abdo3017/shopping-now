@@ -2,7 +2,7 @@ package com.example.e_commerce.ui.shoppingcart
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.e_commerce.databinding.ItemProductListBinding
+import com.example.e_commerce.databinding.ItemProductListNewBinding
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Products
 import com.example.e_commerce.ui.base.BaseRecyclerViewAdapter
@@ -14,10 +14,10 @@ class ShoppingCartAdapter(
     val itemsOrderDetails: MutableList<OrderDetails>,
     private val itemClickListener: ItemClickListener,
 ) :
-    BaseRecyclerViewAdapter<Products, ItemProductListBinding>(itemsProducts) {
+    BaseRecyclerViewAdapter<Products, ItemProductListNewBinding>(itemsProducts) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return ProductsViewHolder(
-            ItemProductListBinding.inflate(
+            ItemProductListNewBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ), itemClickListener
         )
@@ -33,8 +33,17 @@ class ShoppingCartAdapter(
         notifyDataSetChanged()
     }
 
+    fun getTotalPrice(): String {
+        var price = 0.0
+        this.listView.onEach {
+            price += (it.value.itemPrice.text.toString().split(" ")[0]
+                .toDouble() * it.value.iteamAmount.text.toString().toDouble())
+        }
+        return price.toString()
+    }
+
     inner class ProductsViewHolder(
-        private val binding: ItemProductListBinding,
+        private val binding: ItemProductListNewBinding,
         private val itemClickListener: ItemClickListener
     ) :
         BaseViewHolder(binding.root) {

@@ -143,7 +143,6 @@ constructor(
                                             listProducts!![product] = it.data
                                     }
                                 }
-                                true
                             }
                         }
                     }

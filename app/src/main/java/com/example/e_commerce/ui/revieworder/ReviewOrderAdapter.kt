@@ -2,7 +2,6 @@ package com.example.e_commerce.ui.revieworder
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.example.e_commerce.databinding.ItemProductList2Binding
 import com.example.e_commerce.databinding.ItemProductListBinding
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Products
@@ -15,10 +14,10 @@ class ReviewOrderAdapter(
     val itemsOrderDetails: MutableList<OrderDetails>,
     private val itemClickListener: ItemClickListener,
 ) :
-    BaseRecyclerViewAdapter<Products, ItemProductList2Binding>(itemsProducts) {
+    BaseRecyclerViewAdapter<Products, ItemProductListBinding>(itemsProducts) {
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BaseViewHolder {
         return ProductsViewHolder(
-            ItemProductList2Binding.inflate(
+            ItemProductListBinding.inflate(
                 LayoutInflater.from(parent.context), parent, false
             ), itemClickListener
         )
@@ -35,7 +34,7 @@ class ReviewOrderAdapter(
     }
 
     inner class ProductsViewHolder(
-        private val binding: ItemProductList2Binding,
+        private val binding: ItemProductListBinding,
         private val itemClickListener: ItemClickListener
     ) :
         BaseViewHolder(binding.root) {

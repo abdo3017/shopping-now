@@ -17,6 +17,8 @@
         <item name="android:textColor">@color/black</item>
         <item name="android:windowBackground">@color/colorGrey</item>
         <item name="android:windowActivityTransitions">true</item>
+        <item name="bottomSheetDialogTheme">@style/AppBottomSheetDialogTheme</item>
+
     </style>
 
 </resources>

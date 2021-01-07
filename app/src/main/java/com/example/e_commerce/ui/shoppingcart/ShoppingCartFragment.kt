@@ -8,6 +8,8 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.RecyclerView
 import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentShoppingCartBinding
@@ -18,6 +20,8 @@ import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
 import com.example.e_commerce.ui.base.ItemLongClickListener
 import com.example.e_commerce.ui.base.RecyclerTouchListener
+import com.example.e_commerce.utils.CustomProgressDialogue
+import com.example.e_commerce.utils.SwipeToDeleteCallback
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -28,20 +32,20 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class ShoppingCartFragment :
-    BaseFragment<FragmentShoppingCartBinding, ShoppingCartViewModel>(true) {
+    BaseFragment<FragmentShoppingCartBinding, ShoppingCartViewModel>(false) {
     private val homeViewModel: ShoppingCartViewModel by viewModels()
     private var categories: MutableList<Categories> = mutableListOf()
     private var products: MutableList<Products> = mutableListOf()
     lateinit var showDialog: AlertDialog.Builder
     private var ordersDetails: MutableList<OrderDetails> = mutableListOf()
     var clickedPosition: Int = 0
+    private lateinit var progress: CustomProgressDialogue
     private lateinit var adapter: ShoppingCartAdapter
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
-        showDialog = AlertDialog.Builder(requireContext())
         onClick()
         getCategoriesData()
         observeData()
@@ -89,8 +93,8 @@ class ShoppingCartFragment :
         }
     }
 
-    private fun setViews() {
-        getViewDataBinding().lifecycleOwner = this
+    private lateinit var alert: AlertDialog
+    private fun setValidDialog() {
         showDialog.setTitle("delete product")
         showDialog.setMessage("are you want to delete this product from Shopping cart!!")
         showDialog.setCancelable(true)
@@ -112,7 +116,15 @@ class ShoppingCartFragment :
         ) { dialog, id ->
             dialog.cancel()
         }
-        val alert11: AlertDialog = showDialog.create()
+    }
+
+    private fun setViews() {
+        getViewDataBinding().lifecycleOwner = this
+        showDialog = AlertDialog.Builder(requireContext())
+        alert = showDialog.create()
+        progress = CustomProgressDialogue(requireContext())
+        enableSwipeToDeleteAndUndo()
+        // setValidDialog()
         adapter = ShoppingCartAdapter(products, ordersDetails, clickListener())
         getViewDataBinding().rvProducts.adapter = adapter
         getViewDataBinding().rvProducts.addOnItemTouchListener(
@@ -120,7 +132,7 @@ class ShoppingCartFragment :
                 getViewDataBinding().rvProducts, object : ItemLongClickListener {
                     override fun onLongClick(position: Int, view: View) {
                         clickedPosition = position
-                        alert11.show()
+                        //alert11.show()
                     }
                 })
         )
@@ -139,7 +151,8 @@ class ShoppingCartFragment :
         getViewModel().dataStateCategories.observe(viewLifecycleOwner, {
             when (it) {
                 is DataState.Loading -> {
-
+                    progress.show()
+                    getViewDataBinding().isLoading = true
                 }
                 is DataState.Success<List<Categories>> -> {
                     categories = it.data.toMutableList()
@@ -158,11 +171,12 @@ class ShoppingCartFragment :
 
                 }
                 is DataState.Success<HashMap<Products, OrderDetails>> -> {
-
+                    getViewDataBinding().isLoading = false
                     ordersDetails = it.data.map { it.value }.toMutableList()
                     products = it.data.map { it.key }.toMutableList()
                     adapter.addItems(products)
                     adapter.addOrderDetails(ordersDetails)
+                    progress.dismiss()
                 }
                 is DataState.Error<*> -> {
 
@@ -224,10 +238,46 @@ class ShoppingCartFragment :
 
 
     private fun onClick() {
-        getViewDataBinding().byButton.setOnClickListener {
-            findNavController().navigate(ShoppingCartFragmentDirections.actionShoppingCartFragmentToReviewOrderFragment())
+        getViewDataBinding().orderBtn.setOnClickListener {
+            findNavController().navigate(
+                ShoppingCartFragmentDirections.actionShoppingCartFragmentToShoppingCartBottomCartFragment(
+                    adapter.getTotalPrice()
+                )
+            )
         }
 
+    }
+
+
+    private fun enableSwipeToDeleteAndUndo() {
+        val swipeToDeleteCallback: SwipeToDeleteCallback =
+            object : SwipeToDeleteCallback(requireContext()) {
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
+                    val position = viewHolder.adapterPosition
+                    clickedPosition = position
+                    adapter.removeItem(clickedPosition)
+                    adapter.removeOrderDetails(clickedPosition)
+//                    val item = adapter.getItem(position)
+//                    adapter.removeItem(position)
+//                    setValidDialog()
+//                    alert=showDialog.create()
+//                    alert.show()
+//                val snackbar = Snackbar
+//                    .make(
+//                        coordinatorLayout,
+//                        "Item was removed from the list.",
+//                        Snackbar.LENGTH_LONG
+//                    )
+//                snackbar.setAction("UNDO") {
+//                    //adapter.restoreItem(item, position)
+//                    getViewDataBinding().rvProducts.scrollToPosition(position)
+//                }
+//                snackbar.setActionTextColor(Color.YELLOW)
+//                snackbar.show()
+                }
+            }
+        val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
+        itemTouchHelper.attachToRecyclerView(getViewDataBinding().rvProducts)
     }
 
 

@@ -8,9 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
+import com.example.e_commerce.databinding.FragmentHomeBinding
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.Products
@@ -27,7 +29,7 @@ import kotlinx.coroutines.launch
 @ExperimentalCoroutinesApi
 @AndroidEntryPoint
 class HomeFragment :
-    BaseFragment<com.example.e_commerce.databinding.FragmentHomeBinding, HomeViewModel>(true) {
+    BaseFragment<FragmentHomeBinding, HomeViewModel>(true) {
     private val homeViewModel: HomeViewModel by viewModels()
     lateinit var fireBaseService: FireBaseRepository
     private var categories: MutableList<Categories> = mutableListOf()
@@ -76,10 +78,19 @@ class HomeFragment :
     }
 
     private fun clickListener() = ItemClickListener { position: Int, view: View ->
-        if (adapter.listView[position]!!.isFav != true) {
-            adapter.listView[position]!!.isFav = true
-            addToShoppingCart(adapter.getItem(position))
+        if (view.id == R.id.add_button) {
+            if (adapter.listView[position]!!.isFav != true) {
+                adapter.listView[position]!!.isFav = true
+                addToShoppingCart(adapter.getItem(position))
+            }
+        } else {
+            findNavController().navigate(
+                HomeFragmentDirections.actionHomeFragmentToProductDetailsFragment(
+                    adapter.getItem(position)
+                )
+            )
         }
+
     }
 
     private fun observeData() {

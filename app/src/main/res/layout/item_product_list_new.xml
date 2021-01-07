@@ -27,9 +27,9 @@
         android:id="@+id/cardlist_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_7sdp"
         android:foreground="?android:attr/selectableItemBackground"
         android:orientation="vertical"
-        android:layout_margin="@dimen/_7sdp"
         card_view:cardBackgroundColor="@color/color8"
         card_view:cardCornerRadius="10dp"
         card_view:cardElevation="@dimen/cardview_default_elevation">
@@ -39,16 +39,16 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:background="@color/color1"
+            android:background="@color/color8"
             android:orientation="horizontal"
-            android:padding="4dp">
+            android:padding="2dp">
 
             <com.rishabhharit.roundedimageview.RoundedImageView
                 android:id="@+id/product_thumb"
                 android:layout_width="86dp"
-                android:layout_height="86dp"
+                android:layout_height="88dp"
                 android:layout_gravity="center_vertical"
-                android:layout_marginStart="6dp"
+                android:layout_marginStart="4dp"
                 android:gravity="center_vertical"
                 android:src="@mipmap/hustle"
                 android:transitionName="imageViewHome"
@@ -58,7 +58,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/top_icon_detail"
                 android:layout_width="match_parent"
-                android:layout_height="100dp"
+                android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="5dp"
                 android:orientation="vertical">
@@ -68,7 +68,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="5dp"
-                    android:layout_marginTop="@dimen/_20sdp"
+                    android:layout_marginTop="5dp"
                     android:ellipsize="marquee"
                     android:focusable="false"
                     android:freezesText="true"
@@ -88,6 +88,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/item_name"
+                    android:layout_marginStart="5dp"
                     android:layout_marginTop="5dp"
                     android:ellipsize="marquee"
                     android:focusable="false"
@@ -106,11 +107,12 @@
 
                 <TextView
                     android:id="@+id/item_price"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginEnd="15dp"
-                    android:layout_marginBottom="30dp"
+                    android:layout_marginStart="5dp"
+                    android:layout_marginTop="@dimen/_3sdp"
+                    android:layout_marginBottom="5dp"
                     android:ellipsize="marquee"
                     android:focusable="true"
                     android:focusableInTouchMode="true"
@@ -118,13 +120,58 @@
                     android:marqueeRepeatLimit="marquee_forever"
                     android:scrollHorizontally="true"
                     android:singleLine="true"
-                    android:text="@{orderDetails.quantity+` × `+product.price+` EGP`}"
+                    android:text="@{product.price+` EGP`}"
                     android:textColor="@color/color5"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/linearLayout"
                     tools:text="100" />
 
+                <LinearLayout
+                    android:id="@+id/linearLayout"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/_15sdp"
+                    android:background="@drawable/round_edittext2"
+                    android:gravity="center"
+                    android:padding="@dimen/_3sdp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/remove_item"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
+                        android:src="@drawable/ic_minus" />
+
+                    <TextView
+                        android:id="@+id/iteam_amount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_marginRight="5dp"
+                        android:ellipsize="marquee"
+                        android:focusable="true"
+                        android:focusableInTouchMode="true"
+                        android:freezesText="true"
+                        android:marqueeRepeatLimit="marquee_forever"
+                        android:scrollHorizontally="true"
+                        android:singleLine="true"
+                        android:text="@{orderDetails.quantity+``}"
+                        android:textColor="@android:color/background_dark"
+                        android:textSize="20sp"
+                        tools:text="1" />
+
+                    <ImageView
+                        android:id="@+id/add_item"
+                        android:layout_width="35dp"
+                        android:layout_height="35dp"
+                        android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
+                        android:src="@drawable/ic_plus" />
+                </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>
         </LinearLayout>
 

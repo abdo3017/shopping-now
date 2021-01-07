@@ -53,6 +53,7 @@
                 android:layout_height="170dp"
                 android:scaleType="centerCrop"
                 android:transitionName="imageViewHome"
+                android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
                 app:load_backdrop="@{product.image}"
                 app:shapeAppearance="@style/Widget.listItem.Corner"
                 tools:srcCompat="@mipmap/hustle" />
@@ -69,7 +70,7 @@
             app:layout_constraintEnd_toStartOf="@+id/add_button"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/imageViewHome"
+            app:layout_constraintTop_toBottomOf="@+id/add_button"
             app:layout_constraintVertical_bias="0.0"
             tools:text="Joker" />
 
@@ -90,7 +91,7 @@
             style="@style/Widget.ImageButton"
             android:layout_width="@dimen/_26sdp"
             android:layout_height="@dimen/_26sdp"
-            android:layout_marginTop="140dp"
+            android:layout_marginTop="150dp"
             android:background="@drawable/corner_rectangle"
             android:elevation="@dimen/_6sdp"
             android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
