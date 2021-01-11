@@ -10,12 +10,12 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.RecyclerView
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentShoppingCartBinding
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Products
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
 import com.example.e_commerce.ui.base.ItemLongClickListener

@@ -14,12 +14,18 @@
         android:title="@string/my_cart"
         app:showAsAction="always" />
     <item
-        android:id="@+id/MyOrderFragment"
-        android:icon="@drawable/ic_order"
+        android:id="@+id/searchFragment"
+        android:icon="@drawable/search"
 
         android:orderInCategory="3"
-        android:title="my order"
+        android:title="@string/search"
         app:showAsAction="always" />
 
+    <item
+        android:id="@+id/profileFragment"
+        android:icon="@drawable/search"
 
+        android:orderInCategory="3"
+        android:title="profile"
+        app:showAsAction="always" />
 </menu>

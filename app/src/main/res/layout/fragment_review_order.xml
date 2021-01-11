@@ -30,7 +30,7 @@
             android:background="@drawable/corner_rectangle"
             android:text="get location"
             android:textAllCaps="false"
-            android:textColor="@color/color7"
+            android:textColor="@color/color1"
             android:visibility="@{!isLoading ?View.VISIBLE : View.GONE}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

@@ -8,10 +8,10 @@ import android.widget.Toast
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentLoginBinding
 import com.example.e_commerce.datasource.models.Customers
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.utils.PrefManager
 import dagger.hilt.android.AndroidEntryPoint

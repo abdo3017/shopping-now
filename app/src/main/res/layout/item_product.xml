@@ -31,33 +31,22 @@
         android:layout_height="wrap_content"
         android:padding="@dimen/_4sdp">
 
-        <com.google.android.material.card.MaterialCardView
+        <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/imageViewHome"
-            style="@style/Widget.Card"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="170dp"
             android:layout_marginEnd="@dimen/_6sdp"
-            android:layout_marginBottom="@dimen/_8sdp"
+            android:background="@color/transparent"
+            android:scaleType="centerCrop"
             android:transitionName="shared_element_container"
-            app:cardBackgroundColor="@color/transparent"
             app:layout_constraintBottom_toBottomOf="@+id/add_button"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-
-            app:layout_constraintVertical_bias="0.0"
-            app:shapeAppearance="@style/Widget.listItem.Corner">
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:layout_width="match_parent"
-                android:layout_height="170dp"
-                android:scaleType="centerCrop"
-                android:transitionName="imageViewHome"
-                android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
-                app:load_backdrop="@{product.image}"
-                app:shapeAppearance="@style/Widget.listItem.Corner"
-                tools:srcCompat="@mipmap/hustle" />
-        </com.google.android.material.card.MaterialCardView>
+            android:onClick="@{(thisView) -> listener.onClick(position,thisView)}"
+            app:load_backdrop="@{product.image}"
+            app:shapeAppearance="@style/Widget.listItem.Corner"
+            tools:srcCompat="@mipmap/hustle" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/title"

@@ -2,8 +2,8 @@ package com.example.e_commerce.datasource.dbservice
 
 import android.content.ContentValues.TAG
 import android.util.Log
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.datasource.models.*
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.utils.PrefManager
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions

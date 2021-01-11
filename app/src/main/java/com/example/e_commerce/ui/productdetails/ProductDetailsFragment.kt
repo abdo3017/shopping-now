@@ -1,4 +1,4 @@
-package com.example.e_commerce.ui.home
+package com.example.e_commerce.ui.productdetails
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,13 +8,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.BR
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentProductDetailsBinding
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Orders
 import com.example.e_commerce.datasource.models.Products
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.utils.CustomProgressDialogue
 import dagger.hilt.android.AndroidEntryPoint
@@ -107,6 +107,8 @@ class ProductDetailsFragment :
 
                 }
                 is DataState.Success<OrderDetails> -> {
+
+
                     getViewDataBinding().isLoading = true
                     addedToCart()
                     progress.dismiss()

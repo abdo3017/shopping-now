@@ -1,4 +1,4 @@
-package com.app.movie.domain.state
+package com.example.e_commerce.state
 
 
 /**

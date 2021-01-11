@@ -3,10 +3,10 @@ package com.example.e_commerce.ui.search
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.Products
+import com.example.e_commerce.state.DataState
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.launchIn

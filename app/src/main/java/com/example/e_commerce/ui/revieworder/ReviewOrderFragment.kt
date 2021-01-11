@@ -8,12 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentReviewOrderBinding
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.OrderDetails
 import com.example.e_commerce.datasource.models.Products
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
 import com.example.e_commerce.utils.CustomProgressDialogue
@@ -114,11 +114,10 @@ class ReviewOrderFragment :
                     price += products.zip(ordersDetails).toMap()
                         .map { it.key.price * it.value.quantity }
                         .sum()
-                    if (lastProducts == 3)
+                    if (lastProducts == 3) {
                         progress.dismiss()
-                    getViewDataBinding().isLoading = true
-                    getViewDataBinding().byButton.text =
-                        getViewDataBinding().byButton.text.toString() + " / $price"
+                        getViewDataBinding().isLoading = false
+                    }
                     adapter.addItems(products)
                     adapter.addOrderDetails(ordersDetails)
                     adapter.addItems(products)

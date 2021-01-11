@@ -5,11 +5,11 @@
     <data>
 
         <variable
-            name="adress"
+            name="addressName"
             type="String" />
 
         <variable
-            name="city"
+            name="cityName"
             type="String" />
     </data>
 
@@ -17,58 +17,54 @@
         android:id="@+id/bottom_sheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/bottom_sheet_round_style"
+        style="@style/AppBottomSheetDialogTheme"
+        android:background="@drawable/bg_kyb_fragments"
         android:orientation="vertical"
         app:behavior_hideable="true"
         app:behavior_peekHeight="85dp"
         app:layout_behavior="com.google.android.material.bottomsheet.BottomSheetBehavior">
 
-        <androidx.cardview.widget.CardView
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="5dp"
-            app:cardCornerRadius="1dp"
-            app:cardElevation="20dp">
+            android:padding="@dimen/_8sdp"
+            android:orientation="vertical">
 
-            <LinearLayout
+
+            <TextView
+                android:id="@+id/adress"
+                android:layout_marginTop="@dimen/_15sdp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:gravity="center_vertical"
+                android:text="@{addressName}"
+                android:minHeight="50dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color7" />
 
-
-                <TextView
-                    android:id="@+id/adress"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:gravity="center_vertical"
-                    android:minHeight="50dp"
-                    android:text="@{adress}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Headline" />
-
-
-                <TextView
-                    android:id="@+id/city"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    android:gravity="center_vertical"
-                    android:text="@{city}"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                    android:textColor="@color/colorPrimary" />
+            <TextView
+                android:id="@+id/city"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:gravity="center_vertical"
+                android:text="@{cityName}"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="@color/color6" />
 
                 <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/byButton"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/_40sdp"
-                    android:layout_margin="@dimen/_20sdp"
+                    android:layout_margin="@dimen/_10sdp"
                     android:background="@drawable/corner_rectangle"
-                    android:text="submet order now"
+                    android:text="By Now"
                     android:textAllCaps="false"
-                    android:textColor="@color/color7"
+                    android:textColor="@color/color1"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/totalPriceLayout" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
     </LinearLayout>
 </layout>

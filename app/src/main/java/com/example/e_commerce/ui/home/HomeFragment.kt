@@ -10,12 +10,12 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import com.app.movie.domain.state.DataState
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentHomeBinding
 import com.example.e_commerce.datasource.dbservice.FireBaseRepository
 import com.example.e_commerce.datasource.models.Categories
 import com.example.e_commerce.datasource.models.Products
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
 import com.example.e_commerce.utils.CustomProgressDialogue
@@ -161,10 +161,6 @@ class HomeFragment :
             selectCategory(3)
             getProductsDataByCategory(categories[2])
         }
-//        getViewDataBinding().searchButton.setOnClickListener {
-//            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToSearchFragment())
-//        }
-//
 //        getViewDataBinding().btnSignOut.setOnClickListener {
 //            PrefManager.deleteRememberMe()
 //            PrefManager.deleteCustomer()

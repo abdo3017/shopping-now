@@ -16,13 +16,15 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
-import com.app.movie.domain.state.DataState
+import androidx.navigation.fragment.findNavController
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentMapBinding
 import com.example.e_commerce.databinding.MapBottomSheetBinding
 import com.example.e_commerce.datasource.models.Orders
+import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.utils.Constants
+import com.example.e_commerce.utils.CustomProgressDialogue
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
@@ -46,11 +48,14 @@ class MapFragment :
     private val homeViewModel: ReviewOrderViewModel by viewModels()
     var viewDataBinding: MapBottomSheetBinding? = null
     var latitude: Double? = 0.0
+    private lateinit var progress: CustomProgressDialogue
     var longitude: Double? = 0.0
     lateinit var marker: Marker
     lateinit var orders: Orders
     private lateinit var city: String
     private lateinit var address: String
+    private var maps: GoogleMap? = null
+
     private lateinit var geocoder: Geocoder
     var changeLocation = false
     private lateinit var bottom: BottomSheetDialog
@@ -61,10 +66,10 @@ class MapFragment :
     ): View? {
         super.onCreateView(inflater, container, savedInstanceState)
 
-        onClick()
+        setViews(inflater, container, savedInstanceState)
         getCurrentOrder()
         observeData()
-        setViews(inflater, container, savedInstanceState)
+        onClick()
         return getMRootView()
     }
 
@@ -87,6 +92,7 @@ class MapFragment :
         getViewDataBinding().btnSearch.setOnQueryTextListener(this)
         getViewDataBinding().mapView.onCreate(savedInstanceState)
         getViewDataBinding().mapView.getMapAsync(this)
+        progress = CustomProgressDialogue(requireContext())
     }
 
     override
@@ -103,8 +109,8 @@ class MapFragment :
 
     private fun onClick() {
         getViewDataBinding().btnLocation.setOnClickListener {
-            viewDataBinding!!.adress.text = address
-            viewDataBinding!!.city.text = city
+            viewDataBinding!!.addressName = address
+            viewDataBinding!!.cityName = city
             bottom.show()
         }
         viewDataBinding!!.byButton.setOnClickListener {
@@ -131,7 +137,6 @@ class MapFragment :
 
     @SuppressLint("SetTextI18n")
     private fun observeData() {
-
         getViewModel().dataStateOrder.observe(viewLifecycleOwner, {
             when (it) {
                 is DataState.Loading -> {
@@ -148,10 +153,12 @@ class MapFragment :
         getViewModel().dataStateUpdateOrder.observe(viewLifecycleOwner, {
             when (it) {
                 is DataState.Loading -> {
-
+                    progress.show()
+                    bottom.dismiss()
                 }
                 is DataState.Success<Orders> -> {
-                    //findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToHomeFragment())
+                    progress.dismiss()
+                    findNavController().navigate(MapFragmentDirections.actionMapFragmentToHomeFragment())
                 }
                 is DataState.Error<*> -> {
 
@@ -161,7 +168,6 @@ class MapFragment :
 
     }
 
-    var maps: GoogleMap? = null
     override fun onMapReady(p0: GoogleMap?) {
         maps = p0
         maps!!.uiSettings.isMyLocationButtonEnabled = true
@@ -175,7 +181,7 @@ class MapFragment :
         ) {
             setPermission()
             // maps!!.isMyLocationEnabled = true
-        } else
+        }
             maps!!.isMyLocationEnabled = true
         maps!!.setOnMapClickListener {
             changeLocation = true
@@ -200,8 +206,6 @@ class MapFragment :
             if (!changeLocation) {
                 latitude = it.latitude
                 longitude = it.longitude
-                //updateLocation(LatLng(latitude!!, longitude!!))
-
                 try {
                     geocoder = Geocoder(requireContext(), Locale.getDefault())
                     val addresses: List<Address> = geocoder.getFromLocation(

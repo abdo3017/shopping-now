@@ -71,118 +71,125 @@
             android:gravity="center"
             android:orientation="vertical"
             app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-            <LinearLayout
+            <HorizontalScrollView
                 android:id="@+id/categories"
-                android:orientation="horizontal"
-                android:paddingStart="@dimen/_2sdp"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingEnd="@dimen/_2sdp">
+                android:layout_gravity="top"
+                android:paddingStart="@dimen/_2sdp"
+                android:paddingEnd="@dimen/_2sdp"
+                android:scrollbars="none">
 
                 <LinearLayout
-                    android:id="@+id/clothes"
+                    android:orientation="horizontal"
+                    android:paddingStart="@dimen/_2sdp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:background="@drawable/rounded_view"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                    android:paddingEnd="@dimen/_2sdp">
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imgClothes"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
-                        android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/clothes" />
-
-                    <TextView
-                        android:id="@+id/tvClothes"
+                    <LinearLayout
+                        android:id="@+id/clothes"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:maxLines="1"
-                        android:paddingStart="@dimen/_9sdp"
-                        android:paddingTop="@dimen/_5sdp"
-                        android:paddingEnd="@dimen/_9sdp"
-                        android:paddingBottom="@dimen/_5sdp"
-                        android:text="@string/clothes"
-                        android:textColor="@color/color1"
-                        android:textSize="@dimen/_13ssp" />
-                </LinearLayout>
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:background="@drawable/rounded_view"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_2sdp">
 
-                <LinearLayout
-                    android:id="@+id/electronics"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:layout_marginEnd="@dimen/_4sdp"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgClothes"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:src="@mipmap/clothes" />
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imgElectronics"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
-                        android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/electronics" />
+                        <TextView
+                            android:id="@+id/tvClothes"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:maxLines="1"
+                            android:paddingStart="@dimen/_9sdp"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:paddingEnd="@dimen/_9sdp"
+                            android:paddingBottom="@dimen/_5sdp"
+                            android:text="@string/clothes"
+                            android:textColor="@color/color1"
+                            android:textSize="@dimen/_13ssp" />
+                    </LinearLayout>
 
-                    <TextView
-                        android:id="@+id/tvElectronics"
+                    <LinearLayout
+                        android:id="@+id/electronics"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:maxLines="1"
-                        android:paddingStart="@dimen/_9sdp"
-                        android:paddingTop="@dimen/_5sdp"
-                        android:paddingEnd="@dimen/_9sdp"
-                        android:paddingBottom="@dimen/_5sdp"
-                        android:text="@string/electronics"
-                        android:textColor="@color/color3"
-                        android:textSize="@dimen/_13ssp" />
-                </LinearLayout>
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:layout_marginEnd="@dimen/_4sdp"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_2sdp">
 
-                <LinearLayout
-                    android:id="@+id/furniture"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/_10sdp"
-                    android:gravity="center"
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgElectronics"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:src="@mipmap/electronics" />
 
-                    android:orientation="horizontal"
-                    android:padding="@dimen/_2sdp">
+                        <TextView
+                            android:id="@+id/tvElectronics"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:maxLines="1"
+                            android:paddingStart="@dimen/_9sdp"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:paddingEnd="@dimen/_9sdp"
+                            android:paddingBottom="@dimen/_5sdp"
+                            android:text="@string/electronics"
+                            android:textColor="@color/color3"
+                            android:textSize="@dimen/_13ssp" />
+                    </LinearLayout>
 
-                    <de.hdodenhof.circleimageview.CircleImageView
-                        android:id="@+id/imgFurniture"
-                        android:layout_width="@dimen/_24sdp"
-                        android:layout_height="@dimen/_24sdp"
-                        android:layout_marginStart="@dimen/_4sdp"
-                        android:src="@mipmap/furniture" />
-
-                    <TextView
-                        android:id="@+id/tvFurniture"
+                    <LinearLayout
+                        android:id="@+id/furniture"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="true"
-                        android:gravity="start"
-                        android:maxLines="1"
-                        android:paddingStart="@dimen/_9sdp"
-                        android:paddingTop="@dimen/_5sdp"
-                        android:paddingEnd="@dimen/_9sdp"
-                        android:paddingBottom="@dimen/_5sdp"
-                        android:text="@string/Furniture"
-                        android:textColor="@color/color3"
-                        android:textSize="@dimen/_12ssp" />
+                        android:layout_marginTop="@dimen/_10sdp"
+                        android:gravity="center"
+
+                        android:orientation="horizontal"
+                        android:padding="@dimen/_2sdp">
+
+                        <de.hdodenhof.circleimageview.CircleImageView
+                            android:id="@+id/imgFurniture"
+                            android:layout_width="@dimen/_24sdp"
+                            android:layout_height="@dimen/_24sdp"
+                            android:layout_marginStart="@dimen/_4sdp"
+                            android:src="@mipmap/furniture" />
+
+                        <TextView
+                            android:id="@+id/tvFurniture"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="start"
+                            android:maxLines="1"
+                            android:paddingStart="@dimen/_9sdp"
+                            android:paddingTop="@dimen/_5sdp"
+                            android:paddingEnd="@dimen/_9sdp"
+                            android:paddingBottom="@dimen/_5sdp"
+                            android:text="@string/Furniture"
+                            android:textColor="@color/color3"
+                            android:textSize="@dimen/_12ssp" />
+                    </LinearLayout>
+
                 </LinearLayout>
-
-            </LinearLayout>
-
+            </HorizontalScrollView>
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvProducts"
                 android:layout_width="match_parent"
