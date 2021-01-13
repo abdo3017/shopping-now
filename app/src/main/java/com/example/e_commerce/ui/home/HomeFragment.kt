@@ -161,11 +161,6 @@ class HomeFragment :
             selectCategory(3)
             getProductsDataByCategory(categories[2])
         }
-//        getViewDataBinding().btnSignOut.setOnClickListener {
-//            PrefManager.deleteRememberMe()
-//            PrefManager.deleteCustomer()
-//            findNavController().navigate(HomeFragmentDirections.actionHomeFragmentToLoginFragment())
-//        }
 
     }
 

@@ -46,7 +46,7 @@ constructor(
 
     }
 
-    suspend fun getCategory(category: Categories): Categories? {
+    suspend fun getCategor(category: Categories): Categories? {
         return firestoreDB.collection("Categories").document(category.id!!)
             .get().result!!.toObject(Categories::class.java)
     }
@@ -376,6 +376,20 @@ constructor(
         }
     }
 
+    suspend fun getAllOrders(): Flow<DataState<List<Orders>>> = flow {
+        emit(DataState.Loading)
+        try {
+            val data = firestoreDB.collection("Orders")
+                .whereEqualTo("customerId", PrefManager.getCustomer()!!.id)
+                .get().await()
+            Log.d("rerrererr", ": ${data.documents.size}")
+            emit(DataState.Success(data.documents.mapNotNull { it.toObject(Orders::class.java) }))
+        } catch (e: Exception) {
+            Log.d("hohohohohoh", ": ${e.message}")
+            emit(DataState.Error<Any>(e) as DataState<List<Orders>>)
+        }
+    }
+
     suspend fun updateOrder(orders: Orders): Flow<DataState<Orders>> = flow {
         emit(DataState.Loading)
         try {
@@ -396,6 +410,40 @@ constructor(
             .document(order.id!!).delete().await()
     }
 
+    suspend fun getOrdersDetails(
+        orders: List<Orders>,
+        category: Categories
+    ): Flow<DataState<HashMap<Orders, HashMap<Products, OrderDetails>>>> =
+        flow {
+            emit(DataState.Loading)
+            try {
+                val docs = firestoreDB.collection("Categories").document(category.id!!)
+                    .collection("Products").get().await()
+                var list: HashMap<Orders, HashMap<Products, OrderDetails>> = hashMapOf()
+                for (order in orders) {
+                    val listProducts: HashMap<Products, OrderDetails> = hashMapOf()
+                    for (document in docs.documents) {
+                        val product = document.toObject(Products::class.java)
+                        getOrderDetails(
+                            product!!.id!!,
+                            order.id!!
+                        ).collectLatest {
+                            when (it) {
+                                is DataState.Success<OrderDetails> -> {
+                                    if (product.quantity > 0) {
+                                        listProducts[product] = it.data
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    list[order] = listProducts
+                }
+                emit(DataState.Success(list) as DataState<HashMap<Orders, HashMap<Products, OrderDetails>>>)
+            } catch (e: Exception) {
+                emit(DataState.Error<Any>(e) as DataState<HashMap<Orders, HashMap<Products, OrderDetails>>>)
+            }
+        }
 
     suspend fun getCustomer(id: String): Flow<DataState<Customers>> = flow {
         emit(DataState.Loading)

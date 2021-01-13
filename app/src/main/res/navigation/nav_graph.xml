@@ -16,9 +16,6 @@
             app:destination="@id/shoppingCartFragment" />
 
         <action
-            android:id="@+id/action_homeFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_productDetailsFragment"
             app:destination="@id/productDetailsFragment" />
     </fragment>
@@ -120,4 +117,9 @@
             android:name="product"
             app:argType="com.example.e_commerce.datasource.models.Products" />
     </fragment>
+    <fragment
+        android:id="@+id/myOrderFragment"
+        android:name="com.example.e_commerce.ui.myorders.MyOrderFragment"
+        android:label="MyOrderFragment"
+        tools:layout="@layout/fragment_my_order" />
 </navigation>

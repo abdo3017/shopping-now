@@ -10,5 +10,5 @@ data class Orders(
     var address: String? = null,
     var customerId: String? = null,
     var submitted: Boolean? = false,
-    var delevereded: Boolean? = false
+    var delevereded: String? = "not delivered"
 ) : Parcelable

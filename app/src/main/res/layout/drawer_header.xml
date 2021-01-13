@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="user"
+            type="com.example.e_commerce.datasource.models.Customers" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/back_solid_white_right_top_corner">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userImage"
+            android:layout_width="@dimen/_51sdp"
+            android:layout_height="@dimen/_51sdp"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_26sdp"
+            android:src="@mipmap/hustle"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:load_backdrop="@{user.image}" />
+
+        <TextView
+            android:id="@+id/userName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="@{user.name}"
+            android:textColor="@color/color1"
+            android:textSize="@dimen/_13ssp"
+            app:layout_constraintStart_toEndOf="@id/userImage"
+            app:layout_constraintTop_toTopOf="@id/userImage" />
+
+        <TextView
+            android:id="@+id/userEmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_12sdp"
+            android:text="@{user.userName}"
+            android:textColor="@color/color7"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintStart_toEndOf="@id/userImage"
+            app:layout_constraintTop_toBottomOf="@id/userName" />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="-16dp"
+            android:layout_marginBottom="@dimen/_minus12sdp"
+            android:background="@color/colorGrey"
+            app:layout_constraintBottom_toTopOf="@+id/whiteView"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/drawerProfile" />
+
+
+        <TextView
+            android:id="@+id/drawerProfile"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_40sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:drawableStart="@drawable/ic_profile"
+            android:drawablePadding="@dimen/_12sdp"
+            android:paddingTop="@dimen/_12sdp"
+            android:text="@{user.birthDate}"
+            android:textColor="@color/color7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/userEmail" />
+
+        <TextView
+            android:id="@+id/btnJob"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_17sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:drawableStart="@drawable/ic_activity"
+            android:drawablePadding="@dimen/_12sdp"
+            android:text="@{user.job}"
+            android:textColor="@color/color7"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/drawerProfile" />
+
+
+        <TextView
+            android:id="@+id/btnOrders"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_20sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:layout_marginBottom="@dimen/_16sdp"
+            android:background="@drawable/round_rectangle_border_gray"
+            android:drawableStart="@drawable/ic_app"
+            android:drawablePadding="@dimen/_12sdp"
+            android:gravity="center|start"
+            android:padding="@dimen/_9sdp"
+            android:text="My Orders"
+            android:textColor="@color/color7"
+            android:textSize="@dimen/_10ssp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnJob" />
+
+        <View
+            android:id="@+id/whiteView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/_7sdp"
+            android:layout_marginTop="@dimen/_12sdp"
+            android:background="@color/white"
+            app:layout_constraintTop_toBottomOf="@id/btnOrders" />
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="-16dp"
+            android:layout_marginBottom="@dimen/_minus12sdp"
+            android:background="@color/colorGrey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/whiteView" />
+
+        <TextView
+            android:id="@+id/btnLogout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/_15sdp"
+            android:layout_marginTop="@dimen/_17sdp"
+            android:layout_marginEnd="@dimen/_15sdp"
+            android:clickable="true"
+            android:drawableStart="@drawable/ic_sign_out"
+            android:drawablePadding="@dimen/_12sdp"
+            android:focusable="true"
+            android:text="logout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/whiteView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

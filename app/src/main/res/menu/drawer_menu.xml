@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/drawerProfile"
+        android:checked="true"
+        android:icon="@drawable/ic_profile"
+        android:title="birth date" />
+
+    <item
+        android:id="@+id/drawerProgress"
+        android:checked="true"
+        android:icon="@drawable/ic_activity"
+        android:title="my job" />
+
+
+    <item
+        android:id="@+id/btnLogout"
+        android:checked="true"
+        android:drawableStart="@drawable/ic_sign_out"
+        android:title="logout" />
+</menu>

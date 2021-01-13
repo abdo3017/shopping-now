@@ -2,10 +2,13 @@ package com.example.e_commerce.utils
 
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.example.e_commerce.R
+import com.example.e_commerce.ui.myorders.ProductsOfOrderAdapter
 
+@Suppress("UNCHECKED_CAST")
 object BindingAdapters {
     @JvmStatic
     @BindingAdapter("load_backdrop")
@@ -19,6 +22,11 @@ object BindingAdapters {
         }
     }
 
+    @JvmStatic
+    @BindingAdapter("recyclerAdapter")
+    fun setRecyclerViewData(recyclerView: RecyclerView, adapter: ProductsOfOrderAdapter) {
+        recyclerView.adapter = adapter
+    }
 }
 //
 //import android.widget.ImageView
