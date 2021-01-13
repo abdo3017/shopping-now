@@ -1,6 +1,8 @@
-package com.example.e_commerce.ui.authentication.signin
+package com.example.e_commerce.ui.authentication.resetpassword
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +15,7 @@ import com.example.e_commerce.databinding.FragmentResetPasswordBinding
 import com.example.e_commerce.datasource.models.Customers
 import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
+import com.example.e_commerce.utils.CustomProgressDialogue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -25,6 +28,7 @@ class ResetPasswordFragment :
     BaseFragment<FragmentResetPasswordBinding, ResetPasswordViewModel>(false) {
     private val homeViewModel: ResetPasswordViewModel by viewModels()
     var id: String = ""
+    private lateinit var progress: CustomProgressDialogue
     private lateinit var customer: Customers
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -75,7 +79,7 @@ class ResetPasswordFragment :
         getViewModel().dataStateGetCustomers.observe(viewLifecycleOwner, {
             when (it) {
                 is DataState.Loading -> {
-
+                    progress.show()
                 }
                 is DataState.Success<Customers> -> {
                     customer = it.data
@@ -136,6 +140,7 @@ class ResetPasswordFragment :
 
                 }
                 is DataState.Success<Customers> -> {
+                    progress.dismiss()
                     findNavController().popBackStack()
                 }
                 is DataState.Error<*> -> {
@@ -165,5 +170,48 @@ class ResetPasswordFragment :
         }
     }
 
+    private fun checkValidation(): Boolean {
+        var check = true
+        if (getViewDataBinding().etEnteremail.text.isNullOrEmpty()) {
+            getViewDataBinding().tilEmail.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterPassword.text.isNullOrEmpty()) {
+            getViewDataBinding().tilPassword.error = "empty"
+            check = false
+        }
 
+        return check
+    }
+
+    private fun setUpViewsChanges() {
+        getViewDataBinding().etEnteremail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilEmail.isErrorEnabled) {
+                    getViewDataBinding().tilEmail.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterPassword.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilPassword.isErrorEnabled) {
+                    getViewDataBinding().tilPassword.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+    }
 }

@@ -3,6 +3,8 @@ package com.example.e_commerce.ui.authentication.signup
 import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +18,7 @@ import com.example.e_commerce.databinding.FragmentRegisterBinding
 import com.example.e_commerce.datasource.models.Customers
 import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
+import com.example.e_commerce.utils.CustomProgressDialogue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -29,6 +32,7 @@ class RegisterFragment :
     BaseFragment<FragmentRegisterBinding, RegisterViewModel>(false),
     DatePickerDialog.OnDateSetListener {
     private val homeViewModel: RegisterViewModel by viewModels()
+    private lateinit var progress: CustomProgressDialogue
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
@@ -58,7 +62,7 @@ class RegisterFragment :
 
     private fun setViews() {
         getViewDataBinding().lifecycleOwner = this
-
+        setUpViewsChanges()
     }
 
 
@@ -66,7 +70,7 @@ class RegisterFragment :
         getViewModel().dataStateSignUp.observe(viewLifecycleOwner, {
             when (it) {
                 is DataState.Loading -> {
-
+                    progress.show()
                 }
                 is DataState.Success<Boolean> -> {
                     addCustomer(
@@ -88,6 +92,7 @@ class RegisterFragment :
 
                 }
                 is DataState.Success<Customers> -> {
+                    progress.dismiss()
                     findNavController().popBackStack()
                 }
                 is DataState.Error<*> -> {
@@ -120,10 +125,11 @@ class RegisterFragment :
             showDatePickerDialog()
         }
         getViewDataBinding().btnRegister.setOnClickListener {
-            signUp(
-                getViewDataBinding().etEnterEmail.text.toString(),
-                getViewDataBinding().etEnterPassword.text.toString()
-            )
+            if (checkValidation())
+                signUp(
+                    getViewDataBinding().etEnterEmail.text.toString(),
+                    getViewDataBinding().etEnterPassword.text.toString()
+                )
         }
         getViewDataBinding().tvBackToLogin.setOnClickListener {
             findNavController().popBackStack()
@@ -148,4 +154,126 @@ class RegisterFragment :
         birthDate = getViewDataBinding().etEnterBirthDate.text.toString()
     )
 
+    private fun checkValidation(): Boolean {
+        var check = true
+        if (getViewDataBinding().etEnterEmail.text.isNullOrEmpty()) {
+            getViewDataBinding().tilEmailPhone.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterBirthDate.text.isNullOrEmpty()) {
+            getViewDataBinding().tilBirthDate.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterName.text.isNullOrEmpty()) {
+            getViewDataBinding().tilName.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterPassword.text.isNullOrEmpty()) {
+            getViewDataBinding().tilPassword.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterPassword2.text.isNullOrEmpty()) {
+            getViewDataBinding().tilPassword2.error = "empty"
+            check = false
+        }
+        if (getViewDataBinding().etEnterPassword.text!!.isNotEmpty() &&
+            getViewDataBinding().etEnterPassword2.text!!.isNotEmpty() &&
+            getViewDataBinding().etEnterPassword.text!! != getViewDataBinding().etEnterPassword2.text
+        ) {
+            getViewDataBinding().tilPassword2.error = "must equals"
+            check = false
+        }
+        if (getViewDataBinding().etEnterJob.text.isNullOrEmpty()) {
+            getViewDataBinding().tilJob.error = "empty"
+            check = false
+        }
+        return check
+    }
+
+    private fun setUpViewsChanges() {
+        getViewDataBinding().etEnterEmail.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilEmailPhone.isErrorEnabled) {
+                    getViewDataBinding().tilEmailPhone.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterBirthDate.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilBirthDate.isErrorEnabled) {
+                    getViewDataBinding().tilBirthDate.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterName.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilName.isErrorEnabled) {
+                    getViewDataBinding().tilName.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterJob.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilJob.isErrorEnabled) {
+                    getViewDataBinding().tilJob.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterPassword.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilPassword.isErrorEnabled) {
+                    getViewDataBinding().tilPassword.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+        getViewDataBinding().etEnterPassword2.addTextChangedListener(object : TextWatcher {
+            override fun afterTextChanged(p0: Editable?) {
+                if (getViewDataBinding().tilPassword2.isErrorEnabled) {
+                    getViewDataBinding().tilPassword2.isErrorEnabled = false
+                }
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+
+        })
+    }
 }

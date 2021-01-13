@@ -1,4 +1,4 @@
-package com.example.e_commerce.ui.authentication.signin
+package com.example.e_commerce.ui.authentication.resetpassword
 
 import androidx.hilt.Assisted
 import androidx.hilt.lifecycle.ViewModelInject

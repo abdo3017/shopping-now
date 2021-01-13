@@ -71,7 +71,7 @@
         tools:layout="@layout/fragment_register" />
     <fragment
         android:id="@+id/resetPasswordFragment"
-        android:name="com.example.e_commerce.ui.authentication.signin.ResetPasswordFragment"
+        android:name="com.example.e_commerce.ui.authentication.resetpassword.ResetPasswordFragment"
         android:label="ResetPasswordFragment"
         tools:layout="@layout/fragment_reset_password" />
     <fragment
