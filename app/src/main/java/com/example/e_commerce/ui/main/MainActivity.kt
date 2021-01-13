@@ -30,7 +30,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), OnNavigationUpdateList
     }
 
     private fun setupViews() {
-        //getViewDataBinding().drawerLayout.closeDrawer(GravityCompat.START)
         getViewDataBinding().drawerLayout.addDrawerListener(this)
         drawerHeaderBinding = DataBindingUtil.inflate(
             layoutInflater,
