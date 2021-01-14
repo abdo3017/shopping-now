@@ -272,24 +272,8 @@ class ShoppingCartFragment :
                     adapter.removeOrderDetails(clickedPosition)
                     if (adapter.getItems().isEmpty()) {
                         getViewDataBinding().textView.visibility = View.VISIBLE
+                        getViewDataBinding().isLoading = true
                     }
-//                    val item = adapter.getItem(position)
-//                    adapter.removeItem(position)
-//                    setValidDialog()
-//                    alert=showDialog.create()
-//                    alert.show()
-//                val snackbar = Snackbar
-//                    .make(
-//                        coordinatorLayout,
-//                        "Item was removed from the list.",
-//                        Snackbar.LENGTH_LONG
-//                    )
-//                snackbar.setAction("UNDO") {
-//                    //adapter.restoreItem(item, position)
-//                    getViewDataBinding().rvProducts.scrollToPosition(position)
-//                }
-//                snackbar.setActionTextColor(Color.YELLOW)
-//                snackbar.show()
                 }
             }
         val itemTouchHelper = ItemTouchHelper(swipeToDeleteCallback)
