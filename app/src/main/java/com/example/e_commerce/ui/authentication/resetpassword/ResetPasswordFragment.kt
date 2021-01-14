@@ -72,7 +72,7 @@ class ResetPasswordFragment :
 
     private fun setViews() {
         getViewDataBinding().lifecycleOwner = this
-
+        progress = CustomProgressDialogue(requireContext())
     }
 
     private fun observeData() {

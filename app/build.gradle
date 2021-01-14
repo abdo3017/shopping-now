@@ -177,9 +177,8 @@ dependencies {
     //rounded image
     implementation 'com.rishabhharit.roundedimageview:RoundedImageView:0.8.4'
 
-
-    //loading dialog
-    implementation 'com.kaopiz:kprogresshud:1.2.0'
+    //image picker
+    implementation 'com.github.dhaval2404:imagepicker:1.7.1'
 
 }
 

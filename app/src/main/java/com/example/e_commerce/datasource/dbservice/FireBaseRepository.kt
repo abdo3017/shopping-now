@@ -10,9 +10,7 @@ import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import javax.inject.Inject
@@ -46,7 +44,7 @@ constructor(
 
     }
 
-    suspend fun getCategor(category: Categories): Categories? {
+    suspend fun getCategory(category: Categories): Categories? {
         return firestoreDB.collection("Categories").document(category.id!!)
             .get().result!!.toObject(Categories::class.java)
     }
@@ -67,13 +65,13 @@ constructor(
     }
 
     suspend fun updateProduct(product: Products): Flow<DataState<Products>> = flow {
-        emit(DataState.Loading)
         try {
             firestoreDB.collection("Categories").document(product.catId!!)
                 .collection("Products").document(product.id!!).set(
                     product,
                     SetOptions.merge()
                 ).await()
+            Log.d("ContentValues.TAG", "fdf")
             emit(DataState.Success(product))
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<Products>)
@@ -104,7 +102,6 @@ constructor(
                                             listProducts!!.add(product)
                                     }
                                 }
-                                //false
                             }
                         }
                     }
@@ -114,6 +111,7 @@ constructor(
                         }.toMutableList()
                     }
                 }
+                listProducts!!.filter { it.quantity > 0 }.toMutableList()
                 emit(DataState.Success(listProducts) as DataState<List<Products>>)
             } catch (e: Exception) {
                 emit(DataState.Error<Any>(e) as DataState<List<Products>>)
@@ -173,6 +171,9 @@ constructor(
                 updateOrderDetails((dataStateOrderDetails as DataState.Success<OrderDetails>).data)
                 emit(DataState.Success(true) as DataState<Boolean>)
             }
+            Log.d(
+                "ContentValues.TAG", "DocumentSnapshot written with dededdedd:"
+            )
             emit(DataState.Success(false) as DataState<Boolean>)
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<Boolean>)
@@ -212,6 +213,9 @@ constructor(
             val data = firestoreDB.collection("Orders").whereEqualTo("submitted", false)
                 .get().await()
             if (!data.isEmpty && data.documents[0].exists()) {
+                Log.d(
+                    "ContentValues.TAG", "DocumentSnapshot written with dededdedd:"
+                )
                 //add in exist order
                 addOrderDetails(
                     OrderDetails(
@@ -222,23 +226,29 @@ constructor(
                 )
             } else {
                 //add in new order
-                addOrUpdateOrder(
+                var dataStateCurrentOrder: DataState<Orders>? = null
+                addOrder(
                     Orders(
                         customerId = PrefManager.getCustomer()!!.id
                     )
-                )
+                ).collectLatest { dataStateCurrentOrder = it }
                 delay(2000)
-                var dataStateCurrentOrder: DataState<Orders>? = null
-                getCurrentOrder().collectLatest { dataStateCurrentOrder = it }
+                var dataStateOrderDetails: DataState<OrderDetails>? = null
                 addOrderDetails(
                     OrderDetails(
                         (dataStateCurrentOrder as DataState.Success<Orders>).data.id!!,
                         product.id,
-                        0
+                        1
                     )
-                )
+                ).collectLatest { dataStateOrderDetails = it }
             }
-            incrementQuantity(product)
+            delay(1000)
+            var dataState: DataState<Products>? = null
+            if (product.quantity > 0) {
+                product.quantity--
+                updateProduct(product).collectLatest { dataState = it }
+            }
+            delay(1000)
             emit(DataState.Success(product))
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<Products>)
@@ -251,21 +261,22 @@ constructor(
     ): Flow<DataState<Boolean>> = flow {
         emit(DataState.Loading)
         try {
+            product.quantity += orderDetails.quantity
+
+            removeOrderDetails(orderDetails).collect()
+            updateProduct(product).collect()
             var dataStateCurrentOrder: DataState<Orders>? = null
             getCurrentOrder().collectLatest { dataStateCurrentOrder = it }
-            product.quantity += orderDetails.quantity
-            removeOrderDetails(orderDetails)
-            updateProduct(product)
+
             var dataStateCheckOrder: DataState<Boolean>? = null
             checkExistOrder(
                 (dataStateCurrentOrder as DataState.Success<Orders>).data.id!!
             ).collectLatest {
                 dataStateCheckOrder = it
-                true
             }
             when (dataStateCheckOrder) {
                 is DataState.Success<Boolean> -> {
-                    if ((dataStateCheckOrder as DataState.Success<Boolean>).data)
+                    if (!(dataStateCheckOrder as DataState.Success<Boolean>).data)
                         removeOrder((dataStateCurrentOrder as DataState.Success<Orders>).data)
                 }
             }
@@ -334,7 +345,7 @@ constructor(
             } else
                 emit(DataState.Success(false) as DataState<Boolean>)
         } catch (e: Exception) {
-            emit(DataState.Error<Any>(e) as DataState<Boolean>)
+            emit(DataState.Success(false) as DataState<Boolean>)
         }
     }
 
@@ -348,8 +359,11 @@ constructor(
         }
     }
 
-    suspend fun addOrUpdateOrder(order: Orders): Flow<DataState<Orders>> = flow {
+    suspend fun addOrder(order: Orders): Flow<DataState<Orders>> = flow {
         try {
+            Log.d(
+                "ContentValues.TAG", "DocumentSnapshot written with dededdedd:1111111111"
+            )
             val data = firestoreDB.collection("Orders").add(order).await()
             order.id = data.id
             firestoreDB.collection("Orders").document(data.id).set(
@@ -369,8 +383,12 @@ constructor(
             val data = firestoreDB.collection("Orders").whereEqualTo("submitted", false)
                 .whereEqualTo("customerId", PrefManager.getCustomer()!!.id)
                 .get().await()
-            Log.d("hohohohohoh", ": ${data.documents[0].toObject(Orders::class.java)}")
-            emit(DataState.Success(data.documents[0].toObject(Orders::class.java)) as DataState<Orders>)
+            Log.d("hohohohohoh", ": ${data.documents.size}")
+            if (data.documents.isNotEmpty())
+                emit(DataState.Success(data.documents[0].toObject(Orders::class.java)) as DataState<Orders>)
+            else
+                emit(DataState.Error<Any>(Exception("error")) as DataState<Orders>)
+
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<Orders>)
         }
@@ -447,16 +465,19 @@ constructor(
 
     suspend fun getCustomer(id: String): Flow<DataState<Customers>> = flow {
         emit(DataState.Loading)
-        try {
-            val data = firestoreDB.collection("Customers").document(id)
-                .get().await()
-            if (data.exists())
-                emit(DataState.Success(data.toObject(Customers::class.java)) as DataState<Customers>)
-            else
-                emit(DataState.Error<Any>(Exception("Invalid customer id")) as DataState<Customers>)
-        } catch (e: Exception) {
-            emit(DataState.Error<Any>(e) as DataState<Customers>)
-        }
+        //try {
+        val data = firestoreDB.collection("Customers").document(id)
+            .get().await()
+        if (data.exists())
+            emit(DataState.Success(data.toObject(Customers::class.java)) as DataState<Customers>)
+        else
+            emit(DataState.Error<Any>(Exception("Invalid customer id")) as DataState<Customers>)
+//        } catch (e: Exception) {
+//            emit(DataState.Error<Any>(e) as DataState<Customers>)
+//        }
+    }.catch {
+        emit(DataState.Error<Any>(Exception("it")) as DataState<Customers>)
+
     }
 
     suspend fun addCustomer(customer: Customers): Flow<DataState<Customers>> = flow {

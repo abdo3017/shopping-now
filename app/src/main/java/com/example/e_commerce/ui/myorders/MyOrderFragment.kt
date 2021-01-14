@@ -167,8 +167,7 @@ class MyOrderFragment :
 
 
     private fun onClick() {
-        getViewDataBinding().byButton.setOnClickListener {
-        }
+
 
     }
 

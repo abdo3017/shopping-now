@@ -39,6 +39,7 @@ class ShoppingCartFragment :
     lateinit var showDialog: AlertDialog.Builder
     private var ordersDetails: MutableList<OrderDetails> = mutableListOf()
     var clickedPosition: Int = 0
+    var cat3 = 0
     private lateinit var progress: CustomProgressDialogue
     private lateinit var adapter: ShoppingCartAdapter
     override fun onCreateView(
@@ -171,11 +172,19 @@ class ShoppingCartFragment :
 
                 }
                 is DataState.Success<HashMap<Products, OrderDetails>> -> {
-                    getViewDataBinding().isLoading = false
-                    ordersDetails = it.data.map { it.value }.toMutableList()
-                    products = it.data.map { it.key }.toMutableList()
-                    adapter.addItems(products)
-                    adapter.addOrderDetails(ordersDetails)
+                    cat3++
+                    if (it.data.isNotEmpty()) {
+                        cat3--
+                        getViewDataBinding().isLoading = false
+                        ordersDetails = it.data.map { it.value }.toMutableList()
+                        products = it.data.map { it.key }.toMutableList()
+                        adapter.addItems(products)
+                        adapter.addOrderDetails(ordersDetails)
+                    } else
+                        if (cat3 == 3)
+                            getViewDataBinding().textView.visibility = View.VISIBLE
+
+
                     progress.dismiss()
                 }
                 is DataState.Error<*> -> {
@@ -255,8 +264,15 @@ class ShoppingCartFragment :
                 override fun onSwiped(viewHolder: RecyclerView.ViewHolder, i: Int) {
                     val position = viewHolder.adapterPosition
                     clickedPosition = position
+                    removeFromShoppingCart(
+                        adapter.getItem(clickedPosition),
+                        adapter.itemsOrderDetails[clickedPosition]
+                    )
                     adapter.removeItem(clickedPosition)
                     adapter.removeOrderDetails(clickedPosition)
+                    if (adapter.getItems().isEmpty()) {
+                        getViewDataBinding().textView.visibility = View.VISIBLE
+                    }
 //                    val item = adapter.getItem(position)
 //                    adapter.removeItem(position)
 //                    setValidDialog()

@@ -3,6 +3,8 @@ package com.example.e_commerce.di
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -21,6 +23,12 @@ class FireBaseModule {
             .setPersistenceEnabled(true)
             .build()
         return db
+    }
+
+    @Provides
+    @Singleton
+    fun provideFirebaseStorageInstance(): StorageReference {
+        return FirebaseStorage.getInstance().reference
     }
 
     @Provides
