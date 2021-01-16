@@ -3,6 +3,7 @@ package com.example.e_commerce.ui.authentication.signin
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,6 +30,7 @@ class LoginFragment :
     BaseFragment<FragmentLoginBinding, SignInViewModel>(false) {
     private val homeViewModel: SignInViewModel by viewModels()
     var id: String = ""
+    var checked = false
     private lateinit var progress: CustomProgressDialogue
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -61,6 +63,7 @@ class LoginFragment :
     private fun setViews() {
         getViewDataBinding().lifecycleOwner = this
         progress = CustomProgressDialogue(requireContext())
+        setUpViewsChanges()
     }
 
     private fun observeData() {
@@ -73,8 +76,9 @@ class LoginFragment :
                     getCustomer(id)
                 }
                 is DataState.Error<*> -> {
+                    progress.dismiss()
                     Toast.makeText(
-                        requireContext(), "Authentication failed.",
+                        requireContext(), "Authentication failed1.",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -88,13 +92,21 @@ class LoginFragment :
 
                 }
                 is DataState.Success<Customers> -> {
+
                     PrefManager.saveCustomer(it.data)
+                    Log.d(
+                        "ContentValues.TAG",
+                        "DocumentSnapshot written with dededdedd:${PrefManager.getCustomer()!!.id}"
+                    )
                     progress.dismiss()
+                    if (checked)
+                        PrefManager.saveRememberMe("remember")
                     findNavController().navigate(LoginFragmentDirections.actionLoginFragmentToHomeFragment())
                 }
                 is DataState.Error<*> -> {
+                    progress.dismiss()
                     Toast.makeText(
-                        requireContext(), "Authentication failed.",
+                        requireContext(), "Authentication failed.2",
                         Toast.LENGTH_SHORT
                     ).show()
                 }
@@ -113,7 +125,7 @@ class LoginFragment :
         getViewDataBinding().btnLogin.setOnClickListener {
             if (checkValidation()) {
                 if (getViewDataBinding().checkRemember.isChecked) {
-                    PrefManager.saveRememberMe("remember")
+                    checked = true
                 }
                 signIn(
                     getViewDataBinding().etEnterEmail.text.toString(),
@@ -171,5 +183,10 @@ class LoginFragment :
             }
 
         })
+    }
+
+    override fun getBackPressed(): Boolean {
+        requireActivity().finish()
+        return true
     }
 }

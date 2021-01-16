@@ -214,4 +214,9 @@ class ResetPasswordFragment :
 
         })
     }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
+        return true
+    }
 }

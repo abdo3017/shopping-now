@@ -61,7 +61,7 @@ class ShoppingCartBottomCartFragment :
 
     private fun onClick() {
         getViewDataBinding().byButton.setOnClickListener {
-            findNavController().navigate(ShoppingCartBottomCartFragmentDirections.actionShoppingCartBottomCartFragmentToReviewOrderFragment())
+            findNavController().navigate(R.id.reviewOrderFragment)
         }
 
     }

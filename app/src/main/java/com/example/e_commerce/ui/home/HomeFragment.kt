@@ -3,9 +3,11 @@ package com.example.e_commerce.ui.home
 import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.GravityCompat
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
@@ -18,6 +20,7 @@ import com.example.e_commerce.datasource.models.Products
 import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
+import com.example.e_commerce.ui.main.MainActivity
 import com.example.e_commerce.utils.CustomProgressDialogue
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -79,6 +82,7 @@ class HomeFragment :
 
     private fun clickListener() = ItemClickListener { position: Int, view: View ->
         if (view.id == R.id.add_button) {
+            Log.d("ererererer", adapter.getItems()[position].toString())
             if (adapter.listView[position]!!.isFav != true) {
                 adapter.listView[position]!!.isFav = true
                 addToShoppingCart(adapter.getItem(position))
@@ -161,8 +165,13 @@ class HomeFragment :
             selectCategory(3)
             getProductsDataByCategory(categories[2])
         }
+        getViewDataBinding().openDrawer.setOnClickListener {
+            val myActivity = requireActivity() as MainActivity
+            myActivity.getViewDataBinding().drawerLayout.openDrawer(GravityCompat.START)
+        }
 
     }
+
 
     @SuppressLint("ResourceAsColor")
     private fun selectCategory(num: Int) {
@@ -194,4 +203,6 @@ class HomeFragment :
             }
         }
     }
+
+    override fun getBackPressed() = false
 }

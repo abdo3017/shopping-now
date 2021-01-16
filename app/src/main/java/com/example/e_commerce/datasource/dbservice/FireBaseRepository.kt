@@ -9,7 +9,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.SetOptions
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
@@ -165,10 +164,9 @@ constructor(
                     (dataStateCurrentOrder as DataState.Success<Orders>).data.id!!
                 ).collectLatest {
                     dataStateOrderDetails = it
-                    true
                 }
                 (dataStateOrderDetails as DataState.Success<OrderDetails>).data.quantity++
-                updateOrderDetails((dataStateOrderDetails as DataState.Success<OrderDetails>).data)
+                updateOrderDetails((dataStateOrderDetails as DataState.Success<OrderDetails>).data).collect()
                 emit(DataState.Success(true) as DataState<Boolean>)
             }
             Log.d(
@@ -197,7 +195,7 @@ constructor(
                 (dataStateOrderDetails as DataState.Success<OrderDetails>).data.quantity--
                 product.quantity++
                 updateProduct(product)
-                updateOrderDetails((dataStateOrderDetails as DataState.Success<OrderDetails>).data)
+                updateOrderDetails((dataStateOrderDetails as DataState.Success<OrderDetails>).data).collect()
                 emit(DataState.Success(true) as DataState<Boolean>)
             }
             emit(DataState.Success(false) as DataState<Boolean>)
@@ -213,17 +211,14 @@ constructor(
             val data = firestoreDB.collection("Orders").whereEqualTo("submitted", false)
                 .get().await()
             if (!data.isEmpty && data.documents[0].exists()) {
-                Log.d(
-                    "ContentValues.TAG", "DocumentSnapshot written with dededdedd:"
-                )
                 //add in exist order
                 addOrderDetails(
                     OrderDetails(
                         data.documents[0].toObject(Orders::class.java)!!.id,
                         product.id,
-                        0
+                        1
                     )
-                )
+                ).collect()
             } else {
                 //add in new order
                 var dataStateCurrentOrder: DataState<Orders>? = null
@@ -232,23 +227,18 @@ constructor(
                         customerId = PrefManager.getCustomer()!!.id
                     )
                 ).collectLatest { dataStateCurrentOrder = it }
-                delay(2000)
-                var dataStateOrderDetails: DataState<OrderDetails>? = null
                 addOrderDetails(
                     OrderDetails(
                         (dataStateCurrentOrder as DataState.Success<Orders>).data.id!!,
                         product.id,
                         1
                     )
-                ).collectLatest { dataStateOrderDetails = it }
+                ).collect()
             }
-            delay(1000)
-            var dataState: DataState<Products>? = null
             if (product.quantity > 0) {
                 product.quantity--
-                updateProduct(product).collectLatest { dataState = it }
+                updateProduct(product).collect()
             }
-            delay(1000)
             emit(DataState.Success(product))
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<Products>)
@@ -286,7 +276,7 @@ constructor(
         }
     }
 
-    fun addOrderDetails(orderDetails: OrderDetails): Flow<DataState<OrderDetails>> = flow {
+    private fun addOrderDetails(orderDetails: OrderDetails): Flow<DataState<OrderDetails>> = flow {
         try {
             firestoreDB.collection("OrderDetails")
                 .document(orderDetails.orderId + "," + orderDetails.productId).set(orderDetails)
@@ -349,17 +339,21 @@ constructor(
         }
     }
 
-    fun removeOrderDetails(orderDetails: OrderDetails): Flow<DataState<OrderDetails>> = flow {
-        try {
-            firestoreDB.collection("OrderDetails")
-                .document(orderDetails.orderId + "," + orderDetails.productId).delete().await()
-            emit(DataState.Success(orderDetails))
-        } catch (e: Exception) {
-            emit(DataState.Error<Any>(e) as DataState<OrderDetails>)
+    private fun removeOrderDetails(orderDetails: OrderDetails): Flow<DataState<OrderDetails>> =
+        flow {
+            try {
+                firestoreDB.collection("OrderDetails")
+                    .document(orderDetails.orderId + "," + orderDetails.productId).delete().await()
+                emit(DataState.Success(orderDetails))
+            } catch (e: Exception) {
+                emit(DataState.Error<Any>(e) as DataState<OrderDetails>)
+            }
         }
-    }
 
-    suspend fun addOrder(order: Orders): Flow<DataState<Orders>> = flow {
+    private suspend fun addOrder(order: Orders): Flow<DataState<Orders>> = flow {
+        Log.d(
+            "ContentValues.TAG", "DocumentSnapshot written with dededdedd:"
+        )
         try {
             Log.d(
                 "ContentValues.TAG", "DocumentSnapshot written with dededdedd:1111111111"

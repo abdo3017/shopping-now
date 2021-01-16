@@ -50,4 +50,8 @@ class SplashFragment :
     override val bindingVariableValue: Any
         get() = getViewModel()
 
+    override fun getBackPressed(): Boolean {
+        return true
+    }
+
 }

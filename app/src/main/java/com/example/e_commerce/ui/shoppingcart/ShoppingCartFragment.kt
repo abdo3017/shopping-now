@@ -18,8 +18,6 @@ import com.example.e_commerce.datasource.models.Products
 import com.example.e_commerce.state.DataState
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.ui.base.ItemClickListener
-import com.example.e_commerce.ui.base.ItemLongClickListener
-import com.example.e_commerce.ui.base.RecyclerTouchListener
 import com.example.e_commerce.utils.CustomProgressDialogue
 import com.example.e_commerce.utils.SwipeToDeleteCallback
 import dagger.hilt.android.AndroidEntryPoint
@@ -95,29 +93,6 @@ class ShoppingCartFragment :
     }
 
     private lateinit var alert: AlertDialog
-    private fun setValidDialog() {
-        showDialog.setTitle("delete product")
-        showDialog.setMessage("are you want to delete this product from Shopping cart!!")
-        showDialog.setCancelable(true)
-
-        showDialog.setPositiveButton(
-            "Yes"
-        ) { dialog, id ->
-            removeFromShoppingCart(
-                adapter.getItem(clickedPosition),
-                adapter.itemsOrderDetails[clickedPosition]
-            )
-            adapter.removeItem(clickedPosition)
-            adapter.removeOrderDetails(clickedPosition)
-            dialog.cancel()
-        }
-
-        showDialog.setNegativeButton(
-            "No"
-        ) { dialog, id ->
-            dialog.cancel()
-        }
-    }
 
     private fun setViews() {
         getViewDataBinding().lifecycleOwner = this
@@ -125,18 +100,8 @@ class ShoppingCartFragment :
         alert = showDialog.create()
         progress = CustomProgressDialogue(requireContext())
         enableSwipeToDeleteAndUndo()
-        // setValidDialog()
         adapter = ShoppingCartAdapter(products, ordersDetails, clickListener())
         getViewDataBinding().rvProducts.adapter = adapter
-        getViewDataBinding().rvProducts.addOnItemTouchListener(
-            RecyclerTouchListener(requireContext(),
-                getViewDataBinding().rvProducts, object : ItemLongClickListener {
-                    override fun onLongClick(position: Int, view: View) {
-                        clickedPosition = position
-                        //alert11.show()
-                    }
-                })
-        )
     }
 
     private fun clickListener() = ItemClickListener { position: Int, view: View ->
@@ -254,7 +219,9 @@ class ShoppingCartFragment :
                 )
             )
         }
-
+        getViewDataBinding().backBtn.setOnClickListener {
+            getBackPressed()
+        }
     }
 
 
@@ -280,5 +247,17 @@ class ShoppingCartFragment :
         itemTouchHelper.attachToRecyclerView(getViewDataBinding().rvProducts)
     }
 
+    override fun getBackPressed(): Boolean {
+        findNavController().navigate(ShoppingCartFragmentDirections.actionShoppingCartFragmentToHomeFragment())
+        return true
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (cat3 == 3 && adapter.getItems().isEmpty())
+            getViewDataBinding().textView.visibility = View.VISIBLE
+        else
+            getViewDataBinding().textView.visibility = View.GONE
+
+    }
 }

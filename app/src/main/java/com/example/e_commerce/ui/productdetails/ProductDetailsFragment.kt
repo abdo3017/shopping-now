@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.e_commerce.BR
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentProductDetailsBinding
@@ -90,12 +91,18 @@ class ProductDetailsFragment :
             when (it) {
                 is DataState.Loading -> {
                     progress.show()
+                    getViewDataBinding().isLoading = true
+                    Log.d("onBackPressed", "onBackPressed")
+
                 }
                 is DataState.Success<Orders> -> {
                     orders = it.data
                     getOrderDetails(getViewDataBinding().product!!.id!!, it.data.id!!)
                 }
                 is DataState.Error<*> -> {
+                    progress.dismiss()
+                    Log.d("onBackPressed", "onBackPressedooooo")
+                    getViewDataBinding().isLoading = true
 
                 }
             }
@@ -107,8 +114,6 @@ class ProductDetailsFragment :
 
                 }
                 is DataState.Success<OrderDetails> -> {
-
-
                     getViewDataBinding().isLoading = true
                     addedToCart()
                     progress.dismiss()
@@ -190,6 +195,9 @@ class ProductDetailsFragment :
                 addToShoppingCart(getViewDataBinding().product!!)
             }
         }
+        getViewDataBinding().backBtn.setOnClickListener {
+            getBackPressed()
+        }
     }
 
     @SuppressLint("SetTextI18n")
@@ -203,5 +211,10 @@ class ProductDetailsFragment :
             R.drawable.ic_added,
             0
         )
+    }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
+        return true
     }
 }

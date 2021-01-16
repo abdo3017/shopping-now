@@ -180,8 +180,7 @@ class MapFragment :
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             setPermission()
-            // maps!!.isMyLocationEnabled = true
-        }
+        } else
             maps!!.isMyLocationEnabled = true
         maps!!.setOnMapClickListener {
             changeLocation = true
@@ -246,6 +245,7 @@ class MapFragment :
         maps!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
 
+    @SuppressLint("MissingPermission")
     private fun setPermission() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
             ActivityCompat.requestPermissions(
@@ -309,6 +309,11 @@ class MapFragment :
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
+        return true
+    }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
         return true
     }
 

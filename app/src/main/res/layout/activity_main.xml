@@ -62,6 +62,7 @@
             android:id="@+id/nav_view"
             android:layout_width="@dimen/_259sdp"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/_34sdp"
             android:layout_gravity="start"
             android:background="@drawable/back_solid_white_right_top__bottom_corner"
             android:visibility="@{showNavigation ? View.VISIBLE : View.GONE}"

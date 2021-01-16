@@ -385,4 +385,9 @@ class RegisterFragment :
             MimeTypeMap.getFileExtensionFromUrl(Uri.fromFile(File(file.path!!)).toString())
         }
     }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
+        return true
+    }
 }

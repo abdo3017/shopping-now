@@ -37,7 +37,7 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), OnNavigationUpdateList
             getViewDataBinding().navView,
             false
         )
-        getViewDataBinding().navView.addHeaderView(drawerHeaderBinding.root)
+        getViewDataBinding().navView.addView(drawerHeaderBinding.root)
 
         drawerHeaderBinding.btnOrders.setOnClickListener {
             getViewDataBinding().drawerLayout.closeDrawer(GravityCompat.START)

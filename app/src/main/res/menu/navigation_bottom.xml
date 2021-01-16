@@ -21,11 +21,4 @@
         android:title="@string/search"
         app:showAsAction="always" />
 
-    <item
-        android:id="@+id/profileFragment"
-        android:icon="@drawable/search"
-
-        android:orderInCategory="3"
-        android:title="profile"
-        app:showAsAction="always" />
 </menu>

@@ -2,6 +2,7 @@ package com.example.e_commerce.ui.revieworder
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -120,8 +121,6 @@ class ReviewOrderFragment :
                     }
                     adapter.addItems(products)
                     adapter.addOrderDetails(ordersDetails)
-                    adapter.addItems(products)
-                    adapter.addOrderDetails(ordersDetails)
                 }
                 is DataState.Error<*> -> {
 
@@ -148,6 +147,23 @@ class ReviewOrderFragment :
             findNavController().navigate(ReviewOrderFragmentDirections.actionReviewOrderFragmentToMapFragment())
         }
 
+        getViewDataBinding().backBtn.setOnClickListener {
+            getBackPressed()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("rerererer", lastProducts.toString())
+        if (lastProducts == 4) {
+            progress.dismiss()
+            getViewDataBinding().isLoading = false
+        }
+    }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
+        return true
     }
 
 

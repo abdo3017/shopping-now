@@ -2,12 +2,12 @@ package com.example.e_commerce.ui.myorders
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.example.e_commerce.R
 import com.example.e_commerce.databinding.FragmentMyOrderBinding
 import com.example.e_commerce.datasource.models.Categories
@@ -136,13 +136,12 @@ class MyOrderFragment :
                     }
                     iterate++
                     if (iterate == 3) {
-                        parentList.values.onEach {
-                            Log.d("rerrererrooo::", it.values.map { it.orderId }.toString())
-
-                        }
                         adapter.addOrderDetails(parentList)
                         progress.dismiss()
-                        getViewDataBinding().isLoading = false
+                        if (adapter.getItems().isEmpty())
+                            getViewDataBinding().textView.visibility = View.VISIBLE
+                        else
+                            getViewDataBinding().isLoading = false
                     }
 
                 }
@@ -168,7 +167,14 @@ class MyOrderFragment :
 
     private fun onClick() {
 
+        getViewDataBinding().backBtn.setOnClickListener {
+            getBackPressed()
+        }
+    }
 
+    override fun getBackPressed(): Boolean {
+        findNavController().popBackStack()
+        return true
     }
 
 

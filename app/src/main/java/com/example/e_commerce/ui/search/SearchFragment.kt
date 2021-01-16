@@ -228,6 +228,7 @@ class SearchFragment :
             scannerNow()
 
         }
+
     }
 
     override fun onQueryTextSubmit(query: String?): Boolean {
@@ -296,5 +297,11 @@ class SearchFragment :
     override fun onPause() {
         codeScanner.releaseResources()
         super.onPause()
+    }
+
+    override fun getBackPressed(): Boolean {
+        findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToHomeFragment())
+
+        return true
     }
 }
