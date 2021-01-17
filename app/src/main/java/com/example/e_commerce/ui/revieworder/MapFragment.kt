@@ -301,6 +301,7 @@ class MapFragment :
         Log.d("rerererer", "mmmmmmmmm")
         val location = getLocationFromAddress(query!!)
         if (location != null) {
+            marker.remove()
             updateLocation(location)
             return true
         }

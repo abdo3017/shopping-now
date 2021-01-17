@@ -28,7 +28,6 @@ class SplashFragment :
         return getMRootView()
     }
 
-
     override fun getViewModel() = Any()
 
 

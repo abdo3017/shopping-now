@@ -18,7 +18,7 @@ class CustomProgressDialogue(context: Context) : Dialog(context) {
         setCancelable(false)
         setOnCancelListener(null)
         val view: View = LayoutInflater.from(context).inflate(
-            R.layout.item_product2, null
+            R.layout.loading_dialog, null
         )
         setContentView(view)
         window!!.setBackgroundDrawableResource(android.R.color.transparent)

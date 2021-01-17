@@ -15,6 +15,9 @@ import com.example.e_commerce.ui.base.BaseActivity
 import com.example.e_commerce.ui.base.BaseFragment
 import com.example.e_commerce.utils.OnNavigationUpdateListner
 import com.example.e_commerce.utils.PrefManager
+import com.google.android.material.navigation.NavigationView
+import com.google.android.material.shape.CornerFamily
+import com.google.android.material.shape.MaterialShapeDrawable
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 
@@ -30,6 +33,14 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), OnNavigationUpdateList
     }
 
     private fun setupViews() {
+        val radius = resources.getDimension(R.dimen._16sdp)
+        val navigationView: NavigationView = getViewDataBinding().navView
+        val navViewBackground = navigationView.background as MaterialShapeDrawable
+        navViewBackground.shapeAppearanceModel = navViewBackground.shapeAppearanceModel
+            .toBuilder()
+            .setTopRightCorner(CornerFamily.ROUNDED, radius)
+            .setBottomRightCorner(CornerFamily.ROUNDED, radius)
+            .build()
         getViewDataBinding().drawerLayout.addDrawerListener(this)
         drawerHeaderBinding = DataBindingUtil.inflate(
             layoutInflater,
@@ -67,7 +78,6 @@ class MainActivity : BaseActivity<ActivityMainBinding>(), OnNavigationUpdateList
         } else {
             getViewDataBinding().drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
         }
-
     }
 
     override fun onDrawerSlide(drawerView: View, slideOffset: Float) {

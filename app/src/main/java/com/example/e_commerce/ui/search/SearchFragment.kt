@@ -152,7 +152,7 @@ class SearchFragment :
     override val bindingVariableValue: Any
         get() = getViewModel()
 
-    private fun checkPermission() {
+    private fun checkPermissionVoice() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -162,7 +162,7 @@ class SearchFragment :
         }
     }
 
-    private fun checkPermission2() {
+    private fun checkPermissionCamera() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             ActivityCompat.requestPermissions(
                 requireActivity(),
@@ -178,7 +178,7 @@ class SearchFragment :
                 Manifest.permission.CAMERA
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            checkPermission2()
+            checkPermissionCamera()
         }
         // Parameters (default values)
         codeScanner.camera = CodeScanner.CAMERA_BACK // or CAMERA_FRONT or specific camera id
@@ -244,7 +244,7 @@ class SearchFragment :
                 Manifest.permission.RECORD_AUDIO
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            checkPermission()
+            checkPermissionVoice()
         }
 
         val speechRecognizerIntent = Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH)
@@ -301,7 +301,6 @@ class SearchFragment :
 
     override fun getBackPressed(): Boolean {
         findNavController().navigate(SearchFragmentDirections.actionSearchFragmentToHomeFragment())
-
         return true
     }
 }
