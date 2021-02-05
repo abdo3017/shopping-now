@@ -36,7 +36,9 @@ constructor(
         emit(DataState.Loading)
         try {
             val data = firestoreDB.collection("Categories").get().await()
-            emit(DataState.Success(data.documents.mapNotNull { it.toObject(Categories::class.java) }))
+            emit(DataState.Success(data.documents.mapNotNull {
+                it.toObject(Categories::class.java)
+            }))
         } catch (e: Exception) {
             emit(DataState.Error<Any>(e) as DataState<List<Categories>>)
         }

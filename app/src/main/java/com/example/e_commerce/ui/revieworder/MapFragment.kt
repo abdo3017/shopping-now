@@ -11,6 +11,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
@@ -225,8 +226,11 @@ class MapFragment :
             geocoder = Geocoder(requireContext())
             val address = geocoder.getFromLocationName(query, 5)
             if (address != null) {
+                address.forEach {
+                    Log.d("rerererer", it.toString())
+
+                }
                 val location = address[0]
-                Log.d("rerererer", "mmmmmmmmmm")
                 return LatLng(location.latitude, location.longitude)
             }
         } catch (e: Exception) {
@@ -244,6 +248,22 @@ class MapFragment :
             CameraPosition.builder().target(location).zoom(20F).build()
         maps!!.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
     }
+
+    val requestPermissionLauncher =
+        registerForActivityResult(
+            ActivityResultContracts.RequestPermission()
+        ) { isGranted: Boolean ->
+            if (isGranted) {
+                // Permission is granted. Continue the action or workflow in your
+                // app.
+            } else {
+                // Explain to the user that the feature is unavailable because the
+                // features requires a permission that the user has denied. At the
+                // same time, respect the user's decision. Don't link to system
+                // settings in an effort to convince the user to change their
+                // decision.
+            }
+        }
 
     @SuppressLint("MissingPermission")
     private fun setPermission() {
